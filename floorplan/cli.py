@@ -123,7 +123,10 @@ def _format_cutting_groups(s, config, room_label="", reuse_info=None) -> list[st
 
     # 完整板
     full_groups = [g for g in s.cutting_groups
-                   if len(g.pieces) == 1 and g.waste_length < 0.5 and g.width_waste < 10]
+                   if (not g.parent_source_id and len(g.pieces) == 1
+                       and g.waste_length < 0.5 and g.width_waste < 10
+                       and (g.pieces[0].width <= 0
+                            or g.pieces[0].width >= board.width - 0.5))]
     lines.append(f"完整板 ({len(full_groups)} 块):")
     lines.append(f"  放置编号: {', '.join(g.pieces[0].label for g in full_groups[:20])}")
     if len(full_groups) > 20:

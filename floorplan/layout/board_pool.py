@@ -158,6 +158,33 @@ class BoardPool:
             self._pool.append(PoolEntry(leftover, sid, edges=waste_edges))
         return sid
 
+    def cut_new_width(self, actual_w: float, label: str) -> str:
+        """新板，仅宽切。废料按宽度方向记录。"""
+        self._new += 1
+        sid = self._next_id()
+        piece = dict(label=label, length=self._L, width=actual_w)
+
+        waste_w = max(0, self._W - actual_w - self._K)
+        ww = self._L * waste_w if waste_w > 0.5 else 0.0
+
+        from ..models import EdgeType, BoardEdges
+        self._groups[sid] = dict(
+            source_id=sid, parent_source_id="",
+            pieces=[piece],
+            total_length=self._L, used_length=self._L,
+            waste_length=0.0, width_waste=ww,
+            total_width=self._W,
+            edges=BoardEdges(top=EdgeType.CUT, bottom=EdgeType.TONGUE,
+                             left=EdgeType.GROOVE, right=EdgeType.TONGUE),
+        )
+
+        if waste_w > 0.5:
+            w_edges = BoardEdges(top=EdgeType.GROOVE, bottom=EdgeType.CUT,
+                                 left=EdgeType.GROOVE, right=EdgeType.TONGUE)
+            self._pool.append(PoolEntry(self._L, sid, width=waste_w,
+                                         edges=w_edges))
+        return sid
+
     def cut_new_combined(self, used_len: float, actual_w: float, label: str) -> str:
         """新板，同时长切+宽切（组合切割）。
 

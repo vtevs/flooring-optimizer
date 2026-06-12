@@ -1,0 +1,49 @@
+# ============================================================
+# 多房间木地板铺装 — 三 L 拼
+# ============================================================
+# 三 L 拼坐标模型见:
+# docs/superpowers/specs/2026-06-12-three-l-pattern-design.md
+#
+# A 单元: 三块竖板 m×n
+# B 单元: 三块横板 n×m
+# 数学模型(g=0): 组内平移 (3m, 3m)，组间平移 (3m+n, 3m-n)
+# 现实铺装(g=board_gap): 使用 S=m+g，组内 (3S, 3S)，组间 (3S+n, 3S-n)
+# ============================================================
+
+rooms:
+  - name: A
+    width: 2856
+    length: 3462
+  - name: B
+    width: 2560
+    length: 3264
+  - name: C
+    width: 3254
+    length: 3460
+
+board:
+  length: 600
+  width: 88
+  thickness: 18
+
+installation:
+  pattern: l-triple
+  # 三 L 拼由坐标晶格决定方向；当前字段保留给统一配置接口。
+  direction: 0
+  stagger_ratio: 0.5
+
+edges:
+  baseboard_width: 15
+  expansion_gap: 10
+  # 现实铺装需考虑板间缝；数学模型阶段仅用于理解时可设为 0。
+  board_gap: 0.5
+
+kerf: 1.0
+
+output:
+  file: floor_plan.svg
+  scale: auto
+  show_dimensions: true
+  show_labels: true
+  show_grid: false
+  color_scheme: wood

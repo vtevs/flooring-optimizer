@@ -184,6 +184,79 @@ class TestLShapedRoom:
         assert result.statistics.utilization <= 1.02
 
 
+class TestLTripleEngine:
+    """三 L 拼引擎"""
+
+    def test_uses_documented_three_l_coordinate_lattice(self):
+        """按文档坐标生成 A 竖三板 + B 横三板的三 L 拼晶格。"""
+        from floorplan.layout.l_triple import LTripleEngine
+
+        board = BoardConfig(length=35, width=5)
+        room = box(0, 0, 70, 55)
+        result = LTripleEngine().layout(room, board, start_offset=(0, 0))
+
+        rects = {
+            (round(b.x - b.length / 2), round(b.y - b.width / 2),
+             round(b.x + b.length / 2), round(b.y + b.width / 2))
+            for b in result.boards
+        }
+
+        expected = {
+            # a1: three vertical m x n boards
+            (0, 0, 5, 35), (5, 0, 10, 35), (10, 0, 15, 35),
+            # b1: three horizontal n x m boards starting at (3m, 0)
+            (15, 0, 50, 5), (15, 5, 50, 10), (15, 10, 50, 15),
+            # a2 = a1 + (3m, 3m)
+            (15, 15, 20, 50), (20, 15, 25, 50), (25, 15, 30, 50),
+            # b2 = b1 + (3m, 3m)
+            (30, 15, 65, 20), (30, 20, 65, 25), (30, 25, 65, 30),
+        }
+
+        assert expected.issubset(rects)
+        assert (30, 0, 35, 35) not in rects
+
+
+    def test_three_l_coordinate_lattice_honors_board_gap(self):
+        """现实铺装中三 L 拼按板间缝扩展坐标间距。"""
+        from floorplan.layout.l_triple import LTripleEngine
+
+        board = BoardConfig(length=35, width=5)
+        room = box(0, 0, 75, 60)
+        result = LTripleEngine().layout(room, board, start_offset=(0, 0), board_gap=1)
+
+        rects = {
+            (round(b.x - b.length / 2), round(b.y - b.width / 2),
+             round(b.x + b.length / 2), round(b.y + b.width / 2))
+            for b in result.boards
+        }
+
+        expected = {
+            # a1 with 1mm gaps between 5mm boards
+            (0, 0, 5, 35), (6, 0, 11, 35), (12, 0, 17, 35),
+            # b1 starts after three boards plus three gap intervals
+            (18, 0, 53, 5), (18, 6, 53, 11), (18, 12, 53, 17),
+            # a2/b2 shift by (3*(m+gap), 3*(m+gap))
+            (18, 18, 23, 53), (24, 18, 29, 53), (30, 18, 35, 53),
+            (36, 18, 71, 23), (36, 24, 71, 29), (36, 30, 71, 35),
+        }
+
+        assert expected.issubset(rects)
+        assert (5, 0, 10, 35) not in rects
+
+
+    def test_three_l_reuses_length_cut_leftovers(self):
+        """三 L 拼边界长切尾料应进入池并被后续短板复用。"""
+        from floorplan.layout.l_triple import LTripleEngine
+
+        board = BoardConfig(length=35, width=5)
+        # This window creates several pure length cuts shorter than a full board.
+        room = box(0, 0, 70, 24)
+        result = LTripleEngine().layout(room, board, start_offset=(0, 0))
+
+        assert result.statistics.total_boards < len(result.boards)
+        assert any(cg.parent_source_id for cg in result.statistics.cutting_groups)
+
+
 class TestEngineRegistration:
     """验证引擎注册表"""
 
