@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Build/package artifacts
+build/
+dist/
+*.egg-info/
+
+# Local/generated outputs
+output/
+
+# Codex/brainstorm temporary previews
+.superpowers/
+
+# OS/editor noise
+.DS_Store
+.vscode/
+.idea/
+
+# Local visual reference/analysis images
+/docs/3937151565136442408.jpg
+/docs/*-enlarged.png
+/docs/*-edges.png

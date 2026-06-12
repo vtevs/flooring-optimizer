@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1452 1707" width="1452" height="1707">
+<defs>
+<pattern id="hatch" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+<line x1="0" y1="0" x2="0" y2="6" stroke="#e44" stroke-width="1.5" opacity="0.35"/>
+</pattern>
+</defs>
+<style>
+  .room      { fill: #fafafa; stroke: #333; stroke-width: 3; }
+  .area      { fill: none; stroke: #999; stroke-width: 1.5; stroke-dasharray: 8,4; }
+  .board     { fill: #e8d5b0; stroke: #b8945c; stroke-width: 1; }
+  .cut-full  { fill: none; stroke: #bbb; stroke-width: 0.8; stroke-dasharray: 3,3; }
+  .cut-used  { fill: #d4b896; stroke: #c44; stroke-width: 2; }
+  .cut-hatch { fill: url(#hatch); stroke: none; }
+  .edge-t    { fill: none; stroke: #4a8; stroke-width: 2; }
+  .edge-g    { fill: none; stroke: #c84; stroke-width: 2; stroke-dasharray: 5,3; }
+  .edge-cut  { fill: none; stroke: #e44; stroke-width: 2.5; }
+  .dim       { fill: #666; font-size: 11px; font-family: sans-serif; text-anchor: middle; }
+  .lbl       { fill: #333; font-size: 9px; font-family: sans-serif; text-anchor: middle; dominant-baseline: central; }
+  .lbl-cut   { fill: #c00; font-size: 9px; font-family: sans-serif; text-anchor: middle; dominant-baseline: central; font-weight: bold; }
+  .lbl-bg    { fill: #fff; fill-opacity: 0.8; }
+  .legend    { fill: #fff; stroke: #ccc; stroke-width: 1; }
+  .legend-t  { font-size: 10px; font-family: sans-serif; fill: #333; }
+</style>
+<g transform="translate(126.1,1580.7) scale(0.4202,-0.4202)">
+<polygon points="10.0,10.0 10.0,3452.0 2846.0,3452.0 2846.0,10.0 10.0,10.0" class="area"/>
+<polygon points="0.0,0.0 2856.0,0.0 2856.0,3462.0 0.0,3462.0 0.0,0.0" class="room"/>
+<polygon points="465.0,10.0 465.0,158.0 10.0,158.0 10.0,10.0 465.0,10.0" class="cut-full"/>
+<polygon points="10.0,158.0 465.0,158.0 465.0,10.0 10.0,10.0 10.0,158.0" class="cut-used"/>
+<polygon points="10.0,158.0 465.0,158.0 465.0,10.0 10.0,10.0 10.0,158.0" class="cut-hatch"/>
+<line x1="10.0" y1="158.0" x2="465.0" y2="158.0" class="edge-cut"/>
+<line x1="465.0" y1="158.0" x2="465.0" y2="10.0" class="edge-cut"/>
+<line x1="465.0" y1="10.0" x2="10.0" y2="10.0" class="edge-cut"/>
+<line x1="10.0" y1="10.0" x2="10.0" y2="158.0" class="edge-cut"/>
+<line x1="-227.5" y1="-74.0" x2="227.5" y2="-74.0" class="edge-t"/>
+<line x1="-227.5" y1="74.0" x2="227.5" y2="74.0" class="edge-g"/>
+<rect x="465.0" y="10.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1375.0" y="10.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,10.0 2846.0,158.0 2285.0,158.0 2285.0,10.0 2846.0,10.0" class="cut-full"/>
+<polygon points="2846.0,10.0 2285.0,10.0 2285.0,158.0 2846.0,158.0 2846.0,10.0" class="cut-used"/>
+<polygon points="2846.0,10.0 2285.0,10.0 2285.0,158.0 2846.0,158.0 2846.0,10.0" class="cut-hatch"/>
+<line x1="2846.0" y1="10.0" x2="2285.0" y2="10.0" class="edge-cut"/>
+<line x1="2285.0" y1="10.0" x2="2285.0" y2="158.0" class="edge-cut"/>
+<line x1="2285.0" y1="158.0" x2="2846.0" y2="158.0" class="edge-cut"/>
+<line x1="2846.0" y1="158.0" x2="2846.0" y2="10.0" class="edge-cut"/>
+<line x1="-280.5" y1="-74.0" x2="280.5" y2="-74.0" class="edge-t"/>
+<line x1="-280.5" y1="74.0" x2="280.5" y2="74.0" class="edge-g"/>
+<rect x="10.0" y="148.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="920.0" y="148.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1830.0" y="148.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,148.0 2846.0,296.0 2740.0,296.0 2740.0,148.0 2846.0,148.0" class="cut-full"/>
+<polygon points="2846.0,148.0 2740.0,148.0 2740.0,296.0 2846.0,296.0 2846.0,148.0" class="cut-used"/>
+<polygon points="2846.0,148.0 2740.0,148.0 2740.0,296.0 2846.0,296.0 2846.0,148.0" class="cut-hatch"/>
+<line x1="2846.0" y1="148.0" x2="2740.0" y2="148.0" class="edge-cut"/>
+<line x1="2740.0" y1="148.0" x2="2740.0" y2="296.0" class="edge-cut"/>
+<line x1="2740.0" y1="296.0" x2="2846.0" y2="296.0" class="edge-cut"/>
+<line x1="2846.0" y1="296.0" x2="2846.0" y2="148.0" class="edge-cut"/>
+<line x1="-53.0" y1="-74.0" x2="53.0" y2="-74.0" class="edge-t"/>
+<line x1="-53.0" y1="74.0" x2="53.0" y2="74.0" class="edge-g"/>
+<polygon points="465.0,296.0 465.0,444.0 10.0,444.0 10.0,296.0 465.0,296.0" class="cut-full"/>
+<polygon points="10.0,444.0 465.0,444.0 465.0,296.0 10.0,296.0 10.0,444.0" class="cut-used"/>
+<polygon points="10.0,444.0 465.0,444.0 465.0,296.0 10.0,296.0 10.0,444.0" class="cut-hatch"/>
+<line x1="10.0" y1="444.0" x2="465.0" y2="444.0" class="edge-cut"/>
+<line x1="465.0" y1="444.0" x2="465.0" y2="296.0" class="edge-cut"/>
+<line x1="465.0" y1="296.0" x2="10.0" y2="296.0" class="edge-cut"/>
+<line x1="10.0" y1="296.0" x2="10.0" y2="444.0" class="edge-cut"/>
+<line x1="-227.5" y1="-74.0" x2="227.5" y2="-74.0" class="edge-t"/>
+<line x1="-227.5" y1="74.0" x2="227.5" y2="74.0" class="edge-g"/>
+<rect x="465.0" y="296.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1375.0" y="296.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,296.0 2846.0,444.0 2285.0,444.0 2285.0,296.0 2846.0,296.0" class="cut-full"/>
+<polygon points="2846.0,296.0 2285.0,296.0 2285.0,444.0 2846.0,444.0 2846.0,296.0" class="cut-used"/>
+<polygon points="2846.0,296.0 2285.0,296.0 2285.0,444.0 2846.0,444.0 2846.0,296.0" class="cut-hatch"/>
+<line x1="2846.0" y1="296.0" x2="2285.0" y2="296.0" class="edge-cut"/>
+<line x1="2285.0" y1="296.0" x2="2285.0" y2="444.0" class="edge-cut"/>
+<line x1="2285.0" y1="444.0" x2="2846.0" y2="444.0" class="edge-cut"/>
+<line x1="2846.0" y1="444.0" x2="2846.0" y2="296.0" class="edge-cut"/>
+<line x1="-280.5" y1="-74.0" x2="280.5" y2="-74.0" class="edge-t"/>
+<line x1="-280.5" y1="74.0" x2="280.5" y2="74.0" class="edge-g"/>
+<rect x="10.0" y="444.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="920.0" y="444.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1830.0" y="444.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,444.0 2846.0,592.0 2740.0,592.0 2740.0,444.0 2846.0,444.0" class="cut-full"/>
+<polygon points="2846.0,444.0 2740.0,444.0 2740.0,592.0 2846.0,592.0 2846.0,444.0" class="cut-used"/>
+<polygon points="2846.0,444.0 2740.0,444.0 2740.0,592.0 2846.0,592.0 2846.0,444.0" class="cut-hatch"/>
+<line x1="2846.0" y1="444.0" x2="2740.0" y2="444.0" class="edge-cut"/>
+<line x1="2740.0" y1="444.0" x2="2740.0" y2="592.0" class="edge-cut"/>
+<line x1="2740.0" y1="592.0" x2="2846.0" y2="592.0" class="edge-cut"/>
+<line x1="2846.0" y1="592.0" x2="2846.0" y2="444.0" class="edge-cut"/>
+<line x1="-53.0" y1="-74.0" x2="53.0" y2="-74.0" class="edge-t"/>
+<line x1="-53.0" y1="74.0" x2="53.0" y2="74.0" class="edge-g"/>
+<polygon points="465.0,592.0 465.0,740.0 10.0,740.0 10.0,592.0 465.0,592.0" class="cut-full"/>
+<polygon points="10.0,740.0 465.0,740.0 465.0,592.0 10.0,592.0 10.0,740.0" class="cut-used"/>
+<polygon points="10.0,740.0 465.0,740.0 465.0,592.0 10.0,592.0 10.0,740.0" class="cut-hatch"/>
+<line x1="10.0" y1="740.0" x2="465.0" y2="740.0" class="edge-cut"/>
+<line x1="465.0" y1="740.0" x2="465.0" y2="592.0" class="edge-cut"/>
+<line x1="465.0" y1="592.0" x2="10.0" y2="592.0" class="edge-cut"/>
+<line x1="10.0" y1="592.0" x2="10.0" y2="740.0" class="edge-cut"/>
+<line x1="-227.5" y1="-74.0" x2="227.5" y2="-74.0" class="edge-t"/>
+<line x1="-227.5" y1="74.0" x2="227.5" y2="74.0" class="edge-g"/>
+<rect x="465.0" y="592.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1375.0" y="592.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,592.0 2846.0,740.0 2285.0,740.0 2285.0,592.0 2846.0,592.0" class="cut-full"/>
+<polygon points="2846.0,592.0 2285.0,592.0 2285.0,740.0 2846.0,740.0 2846.0,592.0" class="cut-used"/>
+<polygon points="2846.0,592.0 2285.0,592.0 2285.0,740.0 2846.0,740.0 2846.0,592.0" class="cut-hatch"/>
+<line x1="2846.0" y1="592.0" x2="2285.0" y2="592.0" class="edge-cut"/>
+<line x1="2285.0" y1="592.0" x2="2285.0" y2="740.0" class="edge-cut"/>
+<line x1="2285.0" y1="740.0" x2="2846.0" y2="740.0" class="edge-cut"/>
+<line x1="2846.0" y1="740.0" x2="2846.0" y2="592.0" class="edge-cut"/>
+<line x1="-280.5" y1="-74.0" x2="280.5" y2="-74.0" class="edge-t"/>
+<line x1="-280.5" y1="74.0" x2="280.5" y2="74.0" class="edge-g"/>
+<rect x="10.0" y="740.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="920.0" y="740.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1830.0" y="740.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,740.0 2846.0,888.0 2740.0,888.0 2740.0,740.0 2846.0,740.0" class="cut-full"/>
+<polygon points="2846.0,740.0 2740.0,740.0 2740.0,888.0 2846.0,888.0 2846.0,740.0" class="cut-used"/>
+<polygon points="2846.0,740.0 2740.0,740.0 2740.0,888.0 2846.0,888.0 2846.0,740.0" class="cut-hatch"/>
+<line x1="2846.0" y1="740.0" x2="2740.0" y2="740.0" class="edge-cut"/>
+<line x1="2740.0" y1="740.0" x2="2740.0" y2="888.0" class="edge-cut"/>
+<line x1="2740.0" y1="888.0" x2="2846.0" y2="888.0" class="edge-cut"/>
+<line x1="2846.0" y1="888.0" x2="2846.0" y2="740.0" class="edge-cut"/>
+<line x1="-53.0" y1="-74.0" x2="53.0" y2="-74.0" class="edge-t"/>
+<line x1="-53.0" y1="74.0" x2="53.0" y2="74.0" class="edge-g"/>
+<polygon points="465.0,888.0 465.0,1036.0 10.0,1036.0 10.0,888.0 465.0,888.0" class="cut-full"/>
+<polygon points="10.0,1036.0 465.0,1036.0 465.0,888.0 10.0,888.0 10.0,1036.0" class="cut-used"/>
+<polygon points="10.0,1036.0 465.0,1036.0 465.0,888.0 10.0,888.0 10.0,1036.0" class="cut-hatch"/>
+<line x1="10.0" y1="1036.0" x2="465.0" y2="1036.0" class="edge-cut"/>
+<line x1="465.0" y1="1036.0" x2="465.0" y2="888.0" class="edge-cut"/>
+<line x1="465.0" y1="888.0" x2="10.0" y2="888.0" class="edge-cut"/>
+<line x1="10.0" y1="888.0" x2="10.0" y2="1036.0" class="edge-cut"/>
+<line x1="-227.5" y1="-74.0" x2="227.5" y2="-74.0" class="edge-t"/>
+<line x1="-227.5" y1="74.0" x2="227.5" y2="74.0" class="edge-g"/>
+<rect x="465.0" y="888.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1375.0" y="888.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,888.0 2846.0,1036.0 2285.0,1036.0 2285.0,888.0 2846.0,888.0" class="cut-full"/>
+<polygon points="2846.0,888.0 2285.0,888.0 2285.0,1036.0 2846.0,1036.0 2846.0,888.0" class="cut-used"/>
+<polygon points="2846.0,888.0 2285.0,888.0 2285.0,1036.0 2846.0,1036.0 2846.0,888.0" class="cut-hatch"/>
+<line x1="2846.0" y1="888.0" x2="2285.0" y2="888.0" class="edge-cut"/>
+<line x1="2285.0" y1="888.0" x2="2285.0" y2="1036.0" class="edge-cut"/>
+<line x1="2285.0" y1="1036.0" x2="2846.0" y2="1036.0" class="edge-cut"/>
+<line x1="2846.0" y1="1036.0" x2="2846.0" y2="888.0" class="edge-cut"/>
+<line x1="-280.5" y1="-74.0" x2="280.5" y2="-74.0" class="edge-t"/>
+<line x1="-280.5" y1="74.0" x2="280.5" y2="74.0" class="edge-g"/>
+<rect x="10.0" y="1036.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="920.0" y="1036.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1830.0" y="1036.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,1036.0 2846.0,1184.0 2740.0,1184.0 2740.0,1036.0 2846.0,1036.0" class="cut-full"/>
+<polygon points="2846.0,1036.0 2740.0,1036.0 2740.0,1184.0 2846.0,1184.0 2846.0,1036.0" class="cut-used"/>
+<polygon points="2846.0,1036.0 2740.0,1036.0 2740.0,1184.0 2846.0,1184.0 2846.0,1036.0" class="cut-hatch"/>
+<line x1="2846.0" y1="1036.0" x2="2740.0" y2="1036.0" class="edge-cut"/>
+<line x1="2740.0" y1="1036.0" x2="2740.0" y2="1184.0" class="edge-cut"/>
+<line x1="2740.0" y1="1184.0" x2="2846.0" y2="1184.0" class="edge-cut"/>
+<line x1="2846.0" y1="1184.0" x2="2846.0" y2="1036.0" class="edge-cut"/>
+<line x1="-53.0" y1="-74.0" x2="53.0" y2="-74.0" class="edge-t"/>
+<line x1="-53.0" y1="74.0" x2="53.0" y2="74.0" class="edge-g"/>
+<polygon points="465.0,1184.0 465.0,1332.0 10.0,1332.0 10.0,1184.0 465.0,1184.0" class="cut-full"/>
+<polygon points="10.0,1332.0 465.0,1332.0 465.0,1184.0 10.0,1184.0 10.0,1332.0" class="cut-used"/>
+<polygon points="10.0,1332.0 465.0,1332.0 465.0,1184.0 10.0,1184.0 10.0,1332.0" class="cut-hatch"/>
+<line x1="10.0" y1="1332.0" x2="465.0" y2="1332.0" class="edge-cut"/>
+<line x1="465.0" y1="1332.0" x2="465.0" y2="1184.0" class="edge-cut"/>
+<line x1="465.0" y1="1184.0" x2="10.0" y2="1184.0" class="edge-cut"/>
+<line x1="10.0" y1="1184.0" x2="10.0" y2="1332.0" class="edge-cut"/>
+<line x1="-227.5" y1="-74.0" x2="227.5" y2="-74.0" class="edge-t"/>
+<line x1="-227.5" y1="74.0" x2="227.5" y2="74.0" class="edge-g"/>
+<rect x="465.0" y="1184.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1375.0" y="1184.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,1184.0 2846.0,1332.0 2285.0,1332.0 2285.0,1184.0 2846.0,1184.0" class="cut-full"/>
+<polygon points="2846.0,1184.0 2285.0,1184.0 2285.0,1332.0 2846.0,1332.0 2846.0,1184.0" class="cut-used"/>
+<polygon points="2846.0,1184.0 2285.0,1184.0 2285.0,1332.0 2846.0,1332.0 2846.0,1184.0" class="cut-hatch"/>
+<line x1="2846.0" y1="1184.0" x2="2285.0" y2="1184.0" class="edge-cut"/>
+<line x1="2285.0" y1="1184.0" x2="2285.0" y2="1332.0" class="edge-cut"/>
+<line x1="2285.0" y1="1332.0" x2="2846.0" y2="1332.0" class="edge-cut"/>
+<line x1="2846.0" y1="1332.0" x2="2846.0" y2="1184.0" class="edge-cut"/>
+<line x1="-280.5" y1="-74.0" x2="280.5" y2="-74.0" class="edge-t"/>
+<line x1="-280.5" y1="74.0" x2="280.5" y2="74.0" class="edge-g"/>
+<rect x="10.0" y="1332.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="920.0" y="1332.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1830.0" y="1332.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,1332.0 2846.0,1480.0 2740.0,1480.0 2740.0,1332.0 2846.0,1332.0" class="cut-full"/>
+<polygon points="2846.0,1332.0 2740.0,1332.0 2740.0,1480.0 2846.0,1480.0 2846.0,1332.0" class="cut-used"/>
+<polygon points="2846.0,1332.0 2740.0,1332.0 2740.0,1480.0 2846.0,1480.0 2846.0,1332.0" class="cut-hatch"/>
+<line x1="2846.0" y1="1332.0" x2="2740.0" y2="1332.0" class="edge-cut"/>
+<line x1="2740.0" y1="1332.0" x2="2740.0" y2="1480.0" class="edge-cut"/>
+<line x1="2740.0" y1="1480.0" x2="2846.0" y2="1480.0" class="edge-cut"/>
+<line x1="2846.0" y1="1480.0" x2="2846.0" y2="1332.0" class="edge-cut"/>
+<line x1="-53.0" y1="-74.0" x2="53.0" y2="-74.0" class="edge-t"/>
+<line x1="-53.0" y1="74.0" x2="53.0" y2="74.0" class="edge-g"/>
+<polygon points="465.0,1480.0 465.0,1628.0 10.0,1628.0 10.0,1480.0 465.0,1480.0" class="cut-full"/>
+<polygon points="10.0,1628.0 465.0,1628.0 465.0,1480.0 10.0,1480.0 10.0,1628.0" class="cut-used"/>
+<polygon points="10.0,1628.0 465.0,1628.0 465.0,1480.0 10.0,1480.0 10.0,1628.0" class="cut-hatch"/>
+<line x1="10.0" y1="1628.0" x2="465.0" y2="1628.0" class="edge-cut"/>
+<line x1="465.0" y1="1628.0" x2="465.0" y2="1480.0" class="edge-cut"/>
+<line x1="465.0" y1="1480.0" x2="10.0" y2="1480.0" class="edge-cut"/>
+<line x1="10.0" y1="1480.0" x2="10.0" y2="1628.0" class="edge-cut"/>
+<line x1="-227.5" y1="-74.0" x2="227.5" y2="-74.0" class="edge-t"/>
+<line x1="-227.5" y1="74.0" x2="227.5" y2="74.0" class="edge-g"/>
+<rect x="465.0" y="1480.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1375.0" y="1480.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,1480.0 2846.0,1628.0 2285.0,1628.0 2285.0,1480.0 2846.0,1480.0" class="cut-full"/>
+<polygon points="2846.0,1480.0 2285.0,1480.0 2285.0,1628.0 2846.0,1628.0 2846.0,1480.0" class="cut-used"/>
+<polygon points="2846.0,1480.0 2285.0,1480.0 2285.0,1628.0 2846.0,1628.0 2846.0,1480.0" class="cut-hatch"/>
+<line x1="2846.0" y1="1480.0" x2="2285.0" y2="1480.0" class="edge-cut"/>
+<line x1="2285.0" y1="1480.0" x2="2285.0" y2="1628.0" class="edge-cut"/>
+<line x1="2285.0" y1="1628.0" x2="2846.0" y2="1628.0" class="edge-cut"/>
+<line x1="2846.0" y1="1628.0" x2="2846.0" y2="1480.0" class="edge-cut"/>
+<line x1="-280.5" y1="-74.0" x2="280.5" y2="-74.0" class="edge-t"/>
+<line x1="-280.5" y1="74.0" x2="280.5" y2="74.0" class="edge-g"/>
+<rect x="10.0" y="1628.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="920.0" y="1628.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1830.0" y="1628.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,1628.0 2846.0,1776.0 2740.0,1776.0 2740.0,1628.0 2846.0,1628.0" class="cut-full"/>
+<polygon points="2846.0,1628.0 2740.0,1628.0 2740.0,1776.0 2846.0,1776.0 2846.0,1628.0" class="cut-used"/>
+<polygon points="2846.0,1628.0 2740.0,1628.0 2740.0,1776.0 2846.0,1776.0 2846.0,1628.0" class="cut-hatch"/>
+<line x1="2846.0" y1="1628.0" x2="2740.0" y2="1628.0" class="edge-cut"/>
+<line x1="2740.0" y1="1628.0" x2="2740.0" y2="1776.0" class="edge-cut"/>
+<line x1="2740.0" y1="1776.0" x2="2846.0" y2="1776.0" class="edge-cut"/>
+<line x1="2846.0" y1="1776.0" x2="2846.0" y2="1628.0" class="edge-cut"/>
+<line x1="-53.0" y1="-74.0" x2="53.0" y2="-74.0" class="edge-t"/>
+<line x1="-53.0" y1="74.0" x2="53.0" y2="74.0" class="edge-g"/>
+<polygon points="465.0,1776.0 465.0,1924.0 10.0,1924.0 10.0,1776.0 465.0,1776.0" class="cut-full"/>
+<polygon points="10.0,1924.0 465.0,1924.0 465.0,1776.0 10.0,1776.0 10.0,1924.0" class="cut-used"/>
+<polygon points="10.0,1924.0 465.0,1924.0 465.0,1776.0 10.0,1776.0 10.0,1924.0" class="cut-hatch"/>
+<line x1="10.0" y1="1924.0" x2="465.0" y2="1924.0" class="edge-cut"/>
+<line x1="465.0" y1="1924.0" x2="465.0" y2="1776.0" class="edge-cut"/>
+<line x1="465.0" y1="1776.0" x2="10.0" y2="1776.0" class="edge-cut"/>
+<line x1="10.0" y1="1776.0" x2="10.0" y2="1924.0" class="edge-cut"/>
+<line x1="-227.5" y1="-74.0" x2="227.5" y2="-74.0" class="edge-t"/>
+<line x1="-227.5" y1="74.0" x2="227.5" y2="74.0" class="edge-g"/>
+<rect x="465.0" y="1776.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1375.0" y="1776.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,1776.0 2846.0,1924.0 2285.0,1924.0 2285.0,1776.0 2846.0,1776.0" class="cut-full"/>
+<polygon points="2846.0,1776.0 2285.0,1776.0 2285.0,1924.0 2846.0,1924.0 2846.0,1776.0" class="cut-used"/>
+<polygon points="2846.0,1776.0 2285.0,1776.0 2285.0,1924.0 2846.0,1924.0 2846.0,1776.0" class="cut-hatch"/>
+<line x1="2846.0" y1="1776.0" x2="2285.0" y2="1776.0" class="edge-cut"/>
+<line x1="2285.0" y1="1776.0" x2="2285.0" y2="1924.0" class="edge-cut"/>
+<line x1="2285.0" y1="1924.0" x2="2846.0" y2="1924.0" class="edge-cut"/>
+<line x1="2846.0" y1="1924.0" x2="2846.0" y2="1776.0" class="edge-cut"/>
+<line x1="-280.5" y1="-74.0" x2="280.5" y2="-74.0" class="edge-t"/>
+<line x1="-280.5" y1="74.0" x2="280.5" y2="74.0" class="edge-g"/>
+<rect x="10.0" y="1924.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="920.0" y="1924.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1830.0" y="1924.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,1924.0 2846.0,2072.0 2740.0,2072.0 2740.0,1924.0 2846.0,1924.0" class="cut-full"/>
+<polygon points="2846.0,1924.0 2740.0,1924.0 2740.0,2072.0 2846.0,2072.0 2846.0,1924.0" class="cut-used"/>
+<polygon points="2846.0,1924.0 2740.0,1924.0 2740.0,2072.0 2846.0,2072.0 2846.0,1924.0" class="cut-hatch"/>
+<line x1="2846.0" y1="1924.0" x2="2740.0" y2="1924.0" class="edge-cut"/>
+<line x1="2740.0" y1="1924.0" x2="2740.0" y2="2072.0" class="edge-cut"/>
+<line x1="2740.0" y1="2072.0" x2="2846.0" y2="2072.0" class="edge-cut"/>
+<line x1="2846.0" y1="2072.0" x2="2846.0" y2="1924.0" class="edge-cut"/>
+<line x1="-53.0" y1="-74.0" x2="53.0" y2="-74.0" class="edge-t"/>
+<line x1="-53.0" y1="74.0" x2="53.0" y2="74.0" class="edge-g"/>
+<polygon points="465.0,2072.0 465.0,2220.0 10.0,2220.0 10.0,2072.0 465.0,2072.0" class="cut-full"/>
+<polygon points="10.0,2220.0 465.0,2220.0 465.0,2072.0 10.0,2072.0 10.0,2220.0" class="cut-used"/>
+<polygon points="10.0,2220.0 465.0,2220.0 465.0,2072.0 10.0,2072.0 10.0,2220.0" class="cut-hatch"/>
+<line x1="10.0" y1="2220.0" x2="465.0" y2="2220.0" class="edge-cut"/>
+<line x1="465.0" y1="2220.0" x2="465.0" y2="2072.0" class="edge-cut"/>
+<line x1="465.0" y1="2072.0" x2="10.0" y2="2072.0" class="edge-cut"/>
+<line x1="10.0" y1="2072.0" x2="10.0" y2="2220.0" class="edge-cut"/>
+<line x1="-227.5" y1="-74.0" x2="227.5" y2="-74.0" class="edge-t"/>
+<line x1="-227.5" y1="74.0" x2="227.5" y2="74.0" class="edge-g"/>
+<rect x="465.0" y="2072.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1375.0" y="2072.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,2072.0 2846.0,2220.0 2285.0,2220.0 2285.0,2072.0 2846.0,2072.0" class="cut-full"/>
+<polygon points="2846.0,2072.0 2285.0,2072.0 2285.0,2220.0 2846.0,2220.0 2846.0,2072.0" class="cut-used"/>
+<polygon points="2846.0,2072.0 2285.0,2072.0 2285.0,2220.0 2846.0,2220.0 2846.0,2072.0" class="cut-hatch"/>
+<line x1="2846.0" y1="2072.0" x2="2285.0" y2="2072.0" class="edge-cut"/>
+<line x1="2285.0" y1="2072.0" x2="2285.0" y2="2220.0" class="edge-cut"/>
+<line x1="2285.0" y1="2220.0" x2="2846.0" y2="2220.0" class="edge-cut"/>
+<line x1="2846.0" y1="2220.0" x2="2846.0" y2="2072.0" class="edge-cut"/>
+<line x1="-280.5" y1="-74.0" x2="280.5" y2="-74.0" class="edge-t"/>
+<line x1="-280.5" y1="74.0" x2="280.5" y2="74.0" class="edge-g"/>
+<rect x="10.0" y="2220.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="920.0" y="2220.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1830.0" y="2220.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,2220.0 2846.0,2368.0 2740.0,2368.0 2740.0,2220.0 2846.0,2220.0" class="cut-full"/>
+<polygon points="2846.0,2220.0 2740.0,2220.0 2740.0,2368.0 2846.0,2368.0 2846.0,2220.0" class="cut-used"/>
+<polygon points="2846.0,2220.0 2740.0,2220.0 2740.0,2368.0 2846.0,2368.0 2846.0,2220.0" class="cut-hatch"/>
+<line x1="2846.0" y1="2220.0" x2="2740.0" y2="2220.0" class="edge-cut"/>
+<line x1="2740.0" y1="2220.0" x2="2740.0" y2="2368.0" class="edge-cut"/>
+<line x1="2740.0" y1="2368.0" x2="2846.0" y2="2368.0" class="edge-cut"/>
+<line x1="2846.0" y1="2368.0" x2="2846.0" y2="2220.0" class="edge-cut"/>
+<line x1="-53.0" y1="-74.0" x2="53.0" y2="-74.0" class="edge-t"/>
+<line x1="-53.0" y1="74.0" x2="53.0" y2="74.0" class="edge-g"/>
+<polygon points="465.0,2368.0 465.0,2516.0 10.0,2516.0 10.0,2368.0 465.0,2368.0" class="cut-full"/>
+<polygon points="10.0,2516.0 465.0,2516.0 465.0,2368.0 10.0,2368.0 10.0,2516.0" class="cut-used"/>
+<polygon points="10.0,2516.0 465.0,2516.0 465.0,2368.0 10.0,2368.0 10.0,2516.0" class="cut-hatch"/>
+<line x1="10.0" y1="2516.0" x2="465.0" y2="2516.0" class="edge-cut"/>
+<line x1="465.0" y1="2516.0" x2="465.0" y2="2368.0" class="edge-cut"/>
+<line x1="465.0" y1="2368.0" x2="10.0" y2="2368.0" class="edge-cut"/>
+<line x1="10.0" y1="2368.0" x2="10.0" y2="2516.0" class="edge-cut"/>
+<line x1="-227.5" y1="-74.0" x2="227.5" y2="-74.0" class="edge-t"/>
+<line x1="-227.5" y1="74.0" x2="227.5" y2="74.0" class="edge-g"/>
+<rect x="465.0" y="2368.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1375.0" y="2368.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,2368.0 2846.0,2516.0 2285.0,2516.0 2285.0,2368.0 2846.0,2368.0" class="cut-full"/>
+<polygon points="2846.0,2368.0 2285.0,2368.0 2285.0,2516.0 2846.0,2516.0 2846.0,2368.0" class="cut-used"/>
+<polygon points="2846.0,2368.0 2285.0,2368.0 2285.0,2516.0 2846.0,2516.0 2846.0,2368.0" class="cut-hatch"/>
+<line x1="2846.0" y1="2368.0" x2="2285.0" y2="2368.0" class="edge-cut"/>
+<line x1="2285.0" y1="2368.0" x2="2285.0" y2="2516.0" class="edge-cut"/>
+<line x1="2285.0" y1="2516.0" x2="2846.0" y2="2516.0" class="edge-cut"/>
+<line x1="2846.0" y1="2516.0" x2="2846.0" y2="2368.0" class="edge-cut"/>
+<line x1="-280.5" y1="-74.0" x2="280.5" y2="-74.0" class="edge-t"/>
+<line x1="-280.5" y1="74.0" x2="280.5" y2="74.0" class="edge-g"/>
+<rect x="10.0" y="2516.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="920.0" y="2516.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1830.0" y="2516.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,2516.0 2846.0,2664.0 2740.0,2664.0 2740.0,2516.0 2846.0,2516.0" class="cut-full"/>
+<polygon points="2846.0,2516.0 2740.0,2516.0 2740.0,2664.0 2846.0,2664.0 2846.0,2516.0" class="cut-used"/>
+<polygon points="2846.0,2516.0 2740.0,2516.0 2740.0,2664.0 2846.0,2664.0 2846.0,2516.0" class="cut-hatch"/>
+<line x1="2846.0" y1="2516.0" x2="2740.0" y2="2516.0" class="edge-cut"/>
+<line x1="2740.0" y1="2516.0" x2="2740.0" y2="2664.0" class="edge-cut"/>
+<line x1="2740.0" y1="2664.0" x2="2846.0" y2="2664.0" class="edge-cut"/>
+<line x1="2846.0" y1="2664.0" x2="2846.0" y2="2516.0" class="edge-cut"/>
+<line x1="-53.0" y1="-74.0" x2="53.0" y2="-74.0" class="edge-t"/>
+<line x1="-53.0" y1="74.0" x2="53.0" y2="74.0" class="edge-g"/>
+<polygon points="465.0,2664.0 465.0,2812.0 10.0,2812.0 10.0,2664.0 465.0,2664.0" class="cut-full"/>
+<polygon points="10.0,2812.0 465.0,2812.0 465.0,2664.0 10.0,2664.0 10.0,2812.0" class="cut-used"/>
+<polygon points="10.0,2812.0 465.0,2812.0 465.0,2664.0 10.0,2664.0 10.0,2812.0" class="cut-hatch"/>
+<line x1="10.0" y1="2812.0" x2="465.0" y2="2812.0" class="edge-cut"/>
+<line x1="465.0" y1="2812.0" x2="465.0" y2="2664.0" class="edge-cut"/>
+<line x1="465.0" y1="2664.0" x2="10.0" y2="2664.0" class="edge-cut"/>
+<line x1="10.0" y1="2664.0" x2="10.0" y2="2812.0" class="edge-cut"/>
+<line x1="-227.5" y1="-74.0" x2="227.5" y2="-74.0" class="edge-t"/>
+<line x1="-227.5" y1="74.0" x2="227.5" y2="74.0" class="edge-g"/>
+<rect x="465.0" y="2664.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1375.0" y="2664.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,2664.0 2846.0,2812.0 2285.0,2812.0 2285.0,2664.0 2846.0,2664.0" class="cut-full"/>
+<polygon points="2846.0,2664.0 2285.0,2664.0 2285.0,2812.0 2846.0,2812.0 2846.0,2664.0" class="cut-used"/>
+<polygon points="2846.0,2664.0 2285.0,2664.0 2285.0,2812.0 2846.0,2812.0 2846.0,2664.0" class="cut-hatch"/>
+<line x1="2846.0" y1="2664.0" x2="2285.0" y2="2664.0" class="edge-cut"/>
+<line x1="2285.0" y1="2664.0" x2="2285.0" y2="2812.0" class="edge-cut"/>
+<line x1="2285.0" y1="2812.0" x2="2846.0" y2="2812.0" class="edge-cut"/>
+<line x1="2846.0" y1="2812.0" x2="2846.0" y2="2664.0" class="edge-cut"/>
+<line x1="-280.5" y1="-74.0" x2="280.5" y2="-74.0" class="edge-t"/>
+<line x1="-280.5" y1="74.0" x2="280.5" y2="74.0" class="edge-g"/>
+<rect x="10.0" y="2812.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="920.0" y="2812.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1830.0" y="2812.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,2812.0 2846.0,2960.0 2740.0,2960.0 2740.0,2812.0 2846.0,2812.0" class="cut-full"/>
+<polygon points="2846.0,2812.0 2740.0,2812.0 2740.0,2960.0 2846.0,2960.0 2846.0,2812.0" class="cut-used"/>
+<polygon points="2846.0,2812.0 2740.0,2812.0 2740.0,2960.0 2846.0,2960.0 2846.0,2812.0" class="cut-hatch"/>
+<line x1="2846.0" y1="2812.0" x2="2740.0" y2="2812.0" class="edge-cut"/>
+<line x1="2740.0" y1="2812.0" x2="2740.0" y2="2960.0" class="edge-cut"/>
+<line x1="2740.0" y1="2960.0" x2="2846.0" y2="2960.0" class="edge-cut"/>
+<line x1="2846.0" y1="2960.0" x2="2846.0" y2="2812.0" class="edge-cut"/>
+<line x1="-53.0" y1="-74.0" x2="53.0" y2="-74.0" class="edge-t"/>
+<line x1="-53.0" y1="74.0" x2="53.0" y2="74.0" class="edge-g"/>
+<polygon points="465.0,2960.0 465.0,3108.0 10.0,3108.0 10.0,2960.0 465.0,2960.0" class="cut-full"/>
+<polygon points="10.0,3108.0 465.0,3108.0 465.0,2960.0 10.0,2960.0 10.0,3108.0" class="cut-used"/>
+<polygon points="10.0,3108.0 465.0,3108.0 465.0,2960.0 10.0,2960.0 10.0,3108.0" class="cut-hatch"/>
+<line x1="10.0" y1="3108.0" x2="465.0" y2="3108.0" class="edge-cut"/>
+<line x1="465.0" y1="3108.0" x2="465.0" y2="2960.0" class="edge-cut"/>
+<line x1="465.0" y1="2960.0" x2="10.0" y2="2960.0" class="edge-cut"/>
+<line x1="10.0" y1="2960.0" x2="10.0" y2="3108.0" class="edge-cut"/>
+<line x1="-227.5" y1="-74.0" x2="227.5" y2="-74.0" class="edge-t"/>
+<line x1="-227.5" y1="74.0" x2="227.5" y2="74.0" class="edge-g"/>
+<rect x="465.0" y="2960.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1375.0" y="2960.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,2960.0 2846.0,3108.0 2285.0,3108.0 2285.0,2960.0 2846.0,2960.0" class="cut-full"/>
+<polygon points="2846.0,2960.0 2285.0,2960.0 2285.0,3108.0 2846.0,3108.0 2846.0,2960.0" class="cut-used"/>
+<polygon points="2846.0,2960.0 2285.0,2960.0 2285.0,3108.0 2846.0,3108.0 2846.0,2960.0" class="cut-hatch"/>
+<line x1="2846.0" y1="2960.0" x2="2285.0" y2="2960.0" class="edge-cut"/>
+<line x1="2285.0" y1="2960.0" x2="2285.0" y2="3108.0" class="edge-cut"/>
+<line x1="2285.0" y1="3108.0" x2="2846.0" y2="3108.0" class="edge-cut"/>
+<line x1="2846.0" y1="3108.0" x2="2846.0" y2="2960.0" class="edge-cut"/>
+<line x1="-280.5" y1="-74.0" x2="280.5" y2="-74.0" class="edge-t"/>
+<line x1="-280.5" y1="74.0" x2="280.5" y2="74.0" class="edge-g"/>
+<rect x="10.0" y="3108.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="920.0" y="3108.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1830.0" y="3108.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,3108.0 2846.0,3256.0 2740.0,3256.0 2740.0,3108.0 2846.0,3108.0" class="cut-full"/>
+<polygon points="2846.0,3108.0 2740.0,3108.0 2740.0,3256.0 2846.0,3256.0 2846.0,3108.0" class="cut-used"/>
+<polygon points="2846.0,3108.0 2740.0,3108.0 2740.0,3256.0 2846.0,3256.0 2846.0,3108.0" class="cut-hatch"/>
+<line x1="2846.0" y1="3108.0" x2="2740.0" y2="3108.0" class="edge-cut"/>
+<line x1="2740.0" y1="3108.0" x2="2740.0" y2="3256.0" class="edge-cut"/>
+<line x1="2740.0" y1="3256.0" x2="2846.0" y2="3256.0" class="edge-cut"/>
+<line x1="2846.0" y1="3256.0" x2="2846.0" y2="3108.0" class="edge-cut"/>
+<line x1="-53.0" y1="-74.0" x2="53.0" y2="-74.0" class="edge-t"/>
+<line x1="-53.0" y1="74.0" x2="53.0" y2="74.0" class="edge-g"/>
+<polygon points="465.0,3256.0 465.0,3404.0 10.0,3404.0 10.0,3256.0 465.0,3256.0" class="cut-full"/>
+<polygon points="10.0,3404.0 465.0,3404.0 465.0,3256.0 10.0,3256.0 10.0,3404.0" class="cut-used"/>
+<polygon points="10.0,3404.0 465.0,3404.0 465.0,3256.0 10.0,3256.0 10.0,3404.0" class="cut-hatch"/>
+<line x1="10.0" y1="3404.0" x2="465.0" y2="3404.0" class="edge-cut"/>
+<line x1="465.0" y1="3404.0" x2="465.0" y2="3256.0" class="edge-cut"/>
+<line x1="465.0" y1="3256.0" x2="10.0" y2="3256.0" class="edge-cut"/>
+<line x1="10.0" y1="3256.0" x2="10.0" y2="3404.0" class="edge-cut"/>
+<line x1="-227.5" y1="-74.0" x2="227.5" y2="-74.0" class="edge-t"/>
+<line x1="-227.5" y1="74.0" x2="227.5" y2="74.0" class="edge-g"/>
+<rect x="465.0" y="3256.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<rect x="1375.0" y="3256.0" width="910.0" height="148.0" class="board"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,3256.0 2846.0,3404.0 2285.0,3404.0 2285.0,3256.0 2846.0,3256.0" class="cut-full"/>
+<polygon points="2846.0,3256.0 2285.0,3256.0 2285.0,3404.0 2846.0,3404.0 2846.0,3256.0" class="cut-used"/>
+<polygon points="2846.0,3256.0 2285.0,3256.0 2285.0,3404.0 2846.0,3404.0 2846.0,3256.0" class="cut-hatch"/>
+<line x1="2846.0" y1="3256.0" x2="2285.0" y2="3256.0" class="edge-cut"/>
+<line x1="2285.0" y1="3256.0" x2="2285.0" y2="3404.0" class="edge-cut"/>
+<line x1="2285.0" y1="3404.0" x2="2846.0" y2="3404.0" class="edge-cut"/>
+<line x1="2846.0" y1="3404.0" x2="2846.0" y2="3256.0" class="edge-cut"/>
+<line x1="-280.5" y1="-74.0" x2="280.5" y2="-74.0" class="edge-t"/>
+<line x1="-280.5" y1="74.0" x2="280.5" y2="74.0" class="edge-g"/>
+<polygon points="920.0,3404.0 920.0,3552.0 10.0,3552.0 10.0,3404.0 920.0,3404.0" class="cut-full"/>
+<polygon points="10.0,3452.0 920.0,3452.0 920.0,3404.0 10.0,3404.0 10.0,3452.0" class="cut-used"/>
+<polygon points="10.0,3452.0 920.0,3452.0 920.0,3404.0 10.0,3404.0 10.0,3452.0" class="cut-hatch"/>
+<line x1="10.0" y1="3452.0" x2="920.0" y2="3452.0" class="edge-cut"/>
+<line x1="920.0" y1="3452.0" x2="920.0" y2="3404.0" class="edge-cut"/>
+<line x1="920.0" y1="3404.0" x2="10.0" y2="3404.0" class="edge-cut"/>
+<line x1="10.0" y1="3404.0" x2="10.0" y2="3452.0" class="edge-cut"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="1830.0,3404.0 1830.0,3552.0 920.0,3552.0 920.0,3404.0 1830.0,3404.0" class="cut-full"/>
+<polygon points="1830.0,3452.0 1830.0,3404.0 920.0,3404.0 920.0,3452.0 1830.0,3452.0" class="cut-used"/>
+<polygon points="1830.0,3452.0 1830.0,3404.0 920.0,3404.0 920.0,3452.0 1830.0,3452.0" class="cut-hatch"/>
+<line x1="1830.0" y1="3452.0" x2="1830.0" y2="3404.0" class="edge-cut"/>
+<line x1="1830.0" y1="3404.0" x2="920.0" y2="3404.0" class="edge-cut"/>
+<line x1="920.0" y1="3404.0" x2="920.0" y2="3452.0" class="edge-cut"/>
+<line x1="920.0" y1="3452.0" x2="1830.0" y2="3452.0" class="edge-cut"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2740.0,3404.0 2740.0,3552.0 1830.0,3552.0 1830.0,3404.0 2740.0,3404.0" class="cut-full"/>
+<polygon points="2740.0,3452.0 2740.0,3404.0 1830.0,3404.0 1830.0,3452.0 2740.0,3452.0" class="cut-used"/>
+<polygon points="2740.0,3452.0 2740.0,3404.0 1830.0,3404.0 1830.0,3452.0 2740.0,3452.0" class="cut-hatch"/>
+<line x1="2740.0" y1="3452.0" x2="2740.0" y2="3404.0" class="edge-cut"/>
+<line x1="2740.0" y1="3404.0" x2="1830.0" y2="3404.0" class="edge-cut"/>
+<line x1="1830.0" y1="3404.0" x2="1830.0" y2="3452.0" class="edge-cut"/>
+<line x1="1830.0" y1="3452.0" x2="2740.0" y2="3452.0" class="edge-cut"/>
+<line x1="-455.0" y1="-74.0" x2="455.0" y2="-74.0" class="edge-t"/>
+<line x1="-455.0" y1="74.0" x2="455.0" y2="74.0" class="edge-g"/>
+<polygon points="2846.0,3404.0 2846.0,3552.0 2740.0,3552.0 2740.0,3404.0 2846.0,3404.0" class="cut-full"/>
+<polygon points="2846.0,3452.0 2846.0,3404.0 2740.0,3404.0 2740.0,3452.0 2846.0,3452.0" class="cut-used"/>
+<polygon points="2846.0,3452.0 2846.0,3404.0 2740.0,3404.0 2740.0,3452.0 2846.0,3452.0" class="cut-hatch"/>
+<line x1="2846.0" y1="3452.0" x2="2846.0" y2="3404.0" class="edge-cut"/>
+<line x1="2846.0" y1="3404.0" x2="2740.0" y2="3404.0" class="edge-cut"/>
+<line x1="2740.0" y1="3404.0" x2="2740.0" y2="3452.0" class="edge-cut"/>
+<line x1="2740.0" y1="3452.0" x2="2846.0" y2="3452.0" class="edge-cut"/>
+<line x1="-53.0" y1="-74.0" x2="53.0" y2="-74.0" class="edge-t"/>
+<line x1="-53.0" y1="74.0" x2="53.0" y2="74.0" class="edge-g"/>
+</g>
+<text x="726.1" y="1610.7" class="dim">2856mm</text>
+<text x="1356.1" y="853.4" class="dim" transform="rotate(-90,1356.1,853.4)">3462mm</text>
+<g>
+<rect x="215.8" y="1540.4" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="225.8" y="1545.4" class="lbl-cut">1</text>
+<rect x="502.6" y="1540.4" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="512.6" y="1545.4" class="lbl">2</text>
+<rect x="885.0" y="1540.4" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="895.0" y="1545.4" class="lbl">3</text>
+<rect x="1194.0" y="1540.4" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1204.0" y="1545.4" class="lbl-cut">4</text>
+<rect x="311.4" y="1482.4" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="321.4" y="1487.4" class="lbl">5</text>
+<rect x="693.8" y="1482.4" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="703.8" y="1487.4" class="lbl">6</text>
+<rect x="1076.1" y="1482.4" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1086.1" y="1487.4" class="lbl">7</text>
+<rect x="1289.6" y="1482.4" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1299.6" y="1487.4" class="lbl-cut">4</text>
+<rect x="215.8" y="1420.2" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="225.8" y="1425.2" class="lbl-cut">1</text>
+<rect x="502.6" y="1420.2" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="512.6" y="1425.2" class="lbl">8</text>
+<rect x="885.0" y="1420.2" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="895.0" y="1425.2" class="lbl">9</text>
+<rect x="1194.0" y="1420.2" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1204.0" y="1425.2" class="lbl-cut">10</text>
+<rect x="311.4" y="1358.0" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="321.4" y="1363.0" class="lbl">11</text>
+<rect x="693.8" y="1358.0" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="703.8" y="1363.0" class="lbl">12</text>
+<rect x="1076.1" y="1358.0" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1086.1" y="1363.0" class="lbl">13</text>
+<rect x="1289.6" y="1358.0" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1299.6" y="1363.0" class="lbl-cut">4</text>
+<rect x="215.8" y="1295.8" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="225.8" y="1300.8" class="lbl-cut">14</text>
+<rect x="502.6" y="1295.8" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="512.6" y="1300.8" class="lbl">15</text>
+<rect x="885.0" y="1295.8" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="895.0" y="1300.8" class="lbl">16</text>
+<rect x="1194.0" y="1295.8" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1204.0" y="1300.8" class="lbl-cut">17</text>
+<rect x="311.4" y="1233.7" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="321.4" y="1238.7" class="lbl">18</text>
+<rect x="693.8" y="1233.7" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="703.8" y="1238.7" class="lbl">19</text>
+<rect x="1076.1" y="1233.7" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1086.1" y="1238.7" class="lbl">20</text>
+<rect x="1289.6" y="1233.7" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1299.6" y="1238.7" class="lbl-cut">4</text>
+<rect x="215.8" y="1171.5" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="225.8" y="1176.5" class="lbl-cut">14</text>
+<rect x="502.6" y="1171.5" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="512.6" y="1176.5" class="lbl">21</text>
+<rect x="885.0" y="1171.5" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="895.0" y="1176.5" class="lbl">22</text>
+<rect x="1194.0" y="1171.5" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1204.0" y="1176.5" class="lbl-cut">23</text>
+<rect x="311.4" y="1109.3" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="321.4" y="1114.3" class="lbl">24</text>
+<rect x="693.8" y="1109.3" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="703.8" y="1114.3" class="lbl">25</text>
+<rect x="1076.1" y="1109.3" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1086.1" y="1114.3" class="lbl">26</text>
+<rect x="1289.6" y="1109.3" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1299.6" y="1114.3" class="lbl-cut">10</text>
+<rect x="215.8" y="1047.1" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="225.8" y="1052.1" class="lbl-cut">27</text>
+<rect x="502.6" y="1047.1" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="512.6" y="1052.1" class="lbl">28</text>
+<rect x="885.0" y="1047.1" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="895.0" y="1052.1" class="lbl">29</text>
+<rect x="1194.0" y="1047.1" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1204.0" y="1052.1" class="lbl-cut">30</text>
+<rect x="311.4" y="984.9" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="321.4" y="989.9" class="lbl">31</text>
+<rect x="693.8" y="984.9" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="703.8" y="989.9" class="lbl">32</text>
+<rect x="1076.1" y="984.9" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1086.1" y="989.9" class="lbl">33</text>
+<rect x="1289.6" y="984.9" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1299.6" y="989.9" class="lbl-cut">10</text>
+<rect x="215.8" y="922.7" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="225.8" y="927.7" class="lbl-cut">27</text>
+<rect x="502.6" y="922.7" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="512.6" y="927.7" class="lbl">34</text>
+<rect x="885.0" y="922.7" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="895.0" y="927.7" class="lbl">35</text>
+<rect x="1194.0" y="922.7" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1204.0" y="927.7" class="lbl-cut">36</text>
+<rect x="311.4" y="860.5" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="321.4" y="865.5" class="lbl">37</text>
+<rect x="693.8" y="860.5" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="703.8" y="865.5" class="lbl">38</text>
+<rect x="1076.1" y="860.5" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1086.1" y="865.5" class="lbl">39</text>
+<rect x="1289.6" y="860.5" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1299.6" y="865.5" class="lbl-cut">10</text>
+<rect x="215.8" y="798.4" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="225.8" y="803.4" class="lbl-cut">40</text>
+<rect x="502.6" y="798.4" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="512.6" y="803.4" class="lbl">41</text>
+<rect x="885.0" y="798.4" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="895.0" y="803.4" class="lbl">42</text>
+<rect x="1194.0" y="798.4" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1204.0" y="803.4" class="lbl-cut">43</text>
+<rect x="311.4" y="736.2" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="321.4" y="741.2" class="lbl">44</text>
+<rect x="693.8" y="736.2" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="703.8" y="741.2" class="lbl">45</text>
+<rect x="1076.1" y="736.2" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1086.1" y="741.2" class="lbl">46</text>
+<rect x="1289.6" y="736.2" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1299.6" y="741.2" class="lbl-cut">17</text>
+<rect x="215.8" y="674.0" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="225.8" y="679.0" class="lbl-cut">40</text>
+<rect x="502.6" y="674.0" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="512.6" y="679.0" class="lbl">47</text>
+<rect x="885.0" y="674.0" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="895.0" y="679.0" class="lbl">48</text>
+<rect x="1194.0" y="674.0" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1204.0" y="679.0" class="lbl-cut">49</text>
+<rect x="311.4" y="611.8" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="321.4" y="616.8" class="lbl">50</text>
+<rect x="693.8" y="611.8" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="703.8" y="616.8" class="lbl">51</text>
+<rect x="1076.1" y="611.8" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1086.1" y="616.8" class="lbl">52</text>
+<rect x="1289.6" y="611.8" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1299.6" y="616.8" class="lbl-cut">17</text>
+<rect x="215.8" y="549.6" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="225.8" y="554.6" class="lbl-cut">53</text>
+<rect x="502.6" y="549.6" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="512.6" y="554.6" class="lbl">54</text>
+<rect x="885.0" y="549.6" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="895.0" y="554.6" class="lbl">55</text>
+<rect x="1194.0" y="549.6" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1204.0" y="554.6" class="lbl-cut">56</text>
+<rect x="311.4" y="487.4" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="321.4" y="492.4" class="lbl">57</text>
+<rect x="693.8" y="487.4" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="703.8" y="492.4" class="lbl">58</text>
+<rect x="1076.1" y="487.4" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1086.1" y="492.4" class="lbl">59</text>
+<rect x="1289.6" y="487.4" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1299.6" y="492.4" class="lbl-cut">17</text>
+<rect x="215.8" y="425.3" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="225.8" y="430.3" class="lbl-cut">53</text>
+<rect x="502.6" y="425.3" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="512.6" y="430.3" class="lbl">60</text>
+<rect x="885.0" y="425.3" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="895.0" y="430.3" class="lbl">61</text>
+<rect x="1194.0" y="425.3" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1204.0" y="430.3" class="lbl-cut">62</text>
+<rect x="311.4" y="363.1" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="321.4" y="368.1" class="lbl">63</text>
+<rect x="693.8" y="363.1" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="703.8" y="368.1" class="lbl">64</text>
+<rect x="1076.1" y="363.1" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1086.1" y="368.1" class="lbl">65</text>
+<rect x="1289.6" y="363.1" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1299.6" y="368.1" class="lbl-cut">23</text>
+<rect x="215.8" y="300.9" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="225.8" y="305.9" class="lbl-cut">66</text>
+<rect x="502.6" y="300.9" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="512.6" y="305.9" class="lbl">67</text>
+<rect x="885.0" y="300.9" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="895.0" y="305.9" class="lbl">68</text>
+<rect x="1194.0" y="300.9" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1204.0" y="305.9" class="lbl-cut">69</text>
+<rect x="311.4" y="238.7" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="321.4" y="243.7" class="lbl">70</text>
+<rect x="693.8" y="238.7" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="703.8" y="243.7" class="lbl">71</text>
+<rect x="1076.1" y="238.7" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1086.1" y="243.7" class="lbl">72</text>
+<rect x="1289.6" y="238.7" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1299.6" y="243.7" class="lbl-cut">23</text>
+<rect x="215.8" y="176.5" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="225.8" y="181.5" class="lbl-cut">66</text>
+<rect x="502.6" y="176.5" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="512.6" y="181.5" class="lbl">73</text>
+<rect x="885.0" y="176.5" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="895.0" y="181.5" class="lbl">74</text>
+<rect x="1194.0" y="176.5" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1204.0" y="181.5" class="lbl-cut">75</text>
+<rect x="311.4" y="114.3" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="321.4" y="119.3" class="lbl-cut">76</text>
+<rect x="693.8" y="114.3" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="703.8" y="119.3" class="lbl-cut">77</text>
+<rect x="1076.1" y="114.3" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1086.1" y="119.3" class="lbl-cut">78</text>
+<rect x="1289.6" y="114.3" width="20" height="10" rx="2" class="lbl-bg"/>
+<text x="1299.6" y="119.3" class="lbl-cut">23</text>
+</g>
+<rect x="1262.1008403361345" y="1596.7226890756303" width="170" height="60" rx="4" class="legend"/><g transform="translate(1272.1008403361345,1606.7226890756303)"><line x1="0" y1="0" x2="30" y2="0" class="edge-t"/></g><text x="1312.1008403361345" y="1611.7226890756303" class="legend-t">公榫</text><g transform="translate(1272.1008403361345,1624.7226890756303)"><line x1="0" y1="10" x2="30" y2="10" class="edge-g"/></g><text x="1312.1008403361345" y="1629.7226890756303" class="legend-t">母榫</text><g transform="translate(1272.1008403361345,1642.7226890756303)"><line x1="0" y1="20" x2="30" y2="20" class="edge-cut"/></g><text x="1312.1008403361345" y="1647.7226890756303" class="legend-t">切割边</text>
+</svg>

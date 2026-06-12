@@ -1,0 +1,19 @@
+[project]
+name = "floorplan"
+version = "0.1.0"
+description = "木地板铺装图生成工具"
+requires-python = ">=3.11"
+dependencies = [
+    "shapely>=2.0",
+    "click>=8.0",
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+floorplan = "floorplan.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+]
