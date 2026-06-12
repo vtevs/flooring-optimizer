@@ -314,13 +314,13 @@ def render_multi(multi_result, config, filepath):
                 full = box(b.x - L/2, b.y - W/2, b.x + L/2, b.y + W/2)
                 if b.rotation and abs(b.rotation) > 0.1:
                     full = affinity.rotate(full, b.rotation, origin=(b.x, b.y))
-                svg.append(_poly_svg_scaled(full, 'cut-full', 0, h, scale, h))
+                svg.append(_poly_svg_scaled(full, 'cut-full', 0, 0, scale, h))
 
                 # 使用部分
                 if b.cut_polygon:
                     used = Polygon(b.cut_polygon)
-                    svg.append(_poly_svg_scaled(used, 'cut-used', 0, h, scale, h))
-                    svg.append(_poly_svg_scaled(used, 'cut-hatch', 0, h, scale, h))
+                    svg.append(_poly_svg_scaled(used, 'cut-used', 0, 0, scale, h))
+                    svg.append(_poly_svg_scaled(used, 'cut-hatch', 0, 0, scale, h))
             elif b.is_cut:
                 bp = box(b.x - L/2, b.y - W/2, b.x + L/2, b.y + W/2)
                 if b.rotation and abs(b.rotation) > 0.1:
