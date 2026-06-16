@@ -114,6 +114,47 @@ installation:
         assert cfg.installation.pattern == Pattern.FIVE_BOARD_SQUARE
 
 
+
+    def test_multi_room_polygon_and_obstacles(self):
+        """多房间支持 polygon 轮廓与柜子障碍物"""
+        yaml = """
+rooms:
+  - name: A
+    type: polygon
+    points:
+      - [0, 0]
+      - [3254, 0]
+      - [3254, 3460]
+      - [1063, 3460]
+      - [1063, 5447]
+      - [0, 5447]
+    obstacles: []
+  - name: C
+    type: rectangle
+    width: 2856
+    length: 3462
+    obstacles:
+      - name: wardrobe
+        type: rectangle
+        x: 0
+        y: 2862
+        width: 1830
+        length: 600
+board:
+  length: 600
+  width: 88
+installation:
+  pattern: l-triple
+"""
+        cfg = _parse(yaml)
+
+        assert cfg.rooms[0].type == "polygon"
+        assert cfg.rooms[0].points[-1] == (0.0, 5447.0)
+        assert cfg.rooms[1].obstacles[0].name == "wardrobe"
+        assert cfg.rooms[1].obstacles[0].x == 0
+        assert cfg.rooms[1].obstacles[0].length == 600
+
+
 class TestConfigValidation:
     """测试配置校验"""
 

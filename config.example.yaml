@@ -1,84 +1,60 @@
-# ============================================================
-# 木地板铺装图生成工具 — 配置文件
-# ============================================================
-# 所有尺寸单位为毫米 (mm)
+# 当前示例：多房间三L拼，支持 L 形 polygon 房间和柜子/衣柜障碍物。
+# 坐标单位为 mm；以左下角为 (0, 0)，X 向右，Y 向上。
 
-# ----------------------------------------------------------
-# 房间定义
-# ----------------------------------------------------------
-room:
-  # 房间类型: "rectangle" | "l-shaped"
-  type: l-shaped
+rooms:
+  - name: A-主卧
+    type: polygon
+    width: 3254
+    length: 5447
+    points:
+      - [0, 0]
+      - [3254, 0]
+      - [3254, 3460]
+      - [1063, 3460]
+      - [1063, 5447]
+      - [0, 5447]
+    obstacles: []
 
-  # --- L 形房间 (type: l-shaped) ---
-  # L 形房间 = 一个包围矩形减去一个角落缺口
-  # width/length = 包围矩形的总宽和总长
-  width: 6000
-  length: 8000
-  notch:
-    width: 3000      # 缺口的宽度
-    depth: 3000      # 缺口的深度
-    # 缺口位于哪个角: "top-left" | "top-right" | "bottom-left" | "bottom-right"
-    position: top-left
+  - name: B-儿童房
+    type: rectangle
+    width: 2562
+    length: 3264
+    obstacles: []
 
-  # --- 矩形房间 (type: rectangle) ---
-  # 只需提供 width 和 length，不需要 notch
-  # type: rectangle
-  # width: 5000
-  # length: 6000
+  - name: C-次卧
+    type: rectangle
+    width: 2856
+    length: 3462
+    obstacles:
+      - name: wardrobe
+        type: rectangle
+        x: 0
+        y: 2862
+        width: 1830
+        length: 600
 
-# ----------------------------------------------------------
-# 地板规格
-# ----------------------------------------------------------
 board:
-  length: 1210       # 板长 (顺着纹理的方向)
-  width: 198         # 板宽
-  # 厚度仅用于记录，不影响铺装计算
-  thickness: 12
+  length: 600
+  width: 88
+  thickness: 18
+  tongue_groove:
+    left_long_edge: groove
+    right_long_edge: tongue
+    bottom_short_edge: groove
+    top_short_edge: tongue
 
-# ----------------------------------------------------------
-# 铺装配置
-# ----------------------------------------------------------
 installation:
-  # 铺装方式: "aligned" | "staggered" | "herringbone" | "five-board-square"
-  pattern: staggered
-
-  # 铺装方向: 板的长边朝向
-  #   0   = 板长边平行于房间长边 (length 方向)
-  #   90  = 板长边平行于房间宽边 (width 方向)
-  #   45  = 板长边与墙面成 45° (仅对人字拼有意义，人字拼始终为 45°)
+  pattern: l-triple
   direction: 0
+  stagger_ratio: 0.5
+  expansion_gap: 10
+  board_gap: 0.5
+  cutting_loss: 3
+  allow_rotation: true
+  allow_piece_reuse: true
+  min_piece_length: 80
+  min_piece_width: 20
 
-  # --- 错缝参数 (仅 pattern: staggered 时生效) ---
-  stagger_ratio: 0.33   # 错缝比例: 0.33 = 1/3错缝, 0.5 = 对半错
-
-  # --- 起始偏移 (可选) ---
-  # 不指定时自动优化；指定后锁定起始偏移量 [x_offset, y_offset]
-  # start_offset: [0, 0]
-
-# ----------------------------------------------------------
-# 收边参数
-# ----------------------------------------------------------
-edges:
-  baseboard_width: 15    # 踢脚线宽度 (遮挡地板边缘)
-  expansion_gap: 10      # 四周伸缩缝，地暖房推荐 10-12mm
-  board_gap: 0           # 板间微缝，通常 0-1mm，默认 0
-
-# ----------------------------------------------------------
-# 切割损耗（锯缝宽度）
-# ----------------------------------------------------------
-kerf: 1.0               # 每次切割损耗 mm，默认 1mm
-
-# ----------------------------------------------------------
-# 输出配置
-# ----------------------------------------------------------
 output:
-  file: floor_plan.svg
-  # 图纸比例: 数字表示 1:N，设为 "auto" 自动适配
-  scale: auto
-  # SVG 内显示的内容
-  show_dimensions: true   # 房间尺寸标注
-  show_labels: true       # 地板编号
-  show_grid: false        # 辅助网格
-  # 颜色方案: "wood" | "bw" (黑白打印)
-  color_scheme: wood
+  svg_path: floor_plan.svg
+  cutting_plan_path: cutting_plan.txt

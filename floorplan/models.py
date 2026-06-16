@@ -42,12 +42,26 @@ class NotchConfig:
 
 
 @dataclass
+class ObstacleConfig:
+    """不可铺装区域（柜子/固定家具等）"""
+    name: str = ""
+    type: str = "rectangle"  # "rectangle" | "polygon"
+    x: float = 0.0
+    y: float = 0.0
+    width: float = 0.0
+    length: float = 0.0
+    points: list = field(default_factory=list)
+
+
+@dataclass
 class RoomConfig:
     """房间配置（解析后的中间表示）"""
-    type: str  # "rectangle" | "l-shaped"
-    width: float
-    length: float
+    type: str  # "rectangle" | "l-shaped" | "polygon"
+    width: float = 0.0
+    length: float = 0.0
     notch: Optional[NotchConfig] = None
+    points: list = field(default_factory=list)
+    obstacles: list = field(default_factory=list)
 
 
 @dataclass
@@ -89,8 +103,12 @@ class OutputConfig:
 class RoomSpec:
     """多房间模式中的单个房间"""
     name: str = ""
+    type: str = "rectangle"
     width: float = 0.0
     length: float = 0.0
+    notch: Optional[NotchConfig] = None
+    points: list = field(default_factory=list)
+    obstacles: list = field(default_factory=list)
 
 
 @dataclass

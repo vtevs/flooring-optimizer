@@ -10,13 +10,11 @@
 """
 
 import itertools
-from shapely.geometry import box
-
 from .models import (Pattern, BoardConfig, RoomSpec, LayoutResult,
                       MultiRoomResult)
 from .layout import ENGINES
 from .layout.board_pool import BoardPool
-from .geometry.room import compute_layout_area
+from .geometry.room import build_room, compute_layout_area
 
 
 def optimize_multi(room_specs, board, edges, kerf, installation=None, **kwargs):
@@ -40,7 +38,7 @@ def optimize_multi(room_specs, board, edges, kerf, installation=None, **kwargs):
     room_best = []
     for rs in room_specs:
         room_area = compute_layout_area(
-            box(0, 0, rs.width, rs.length),
+            build_room(rs),
             edges.baseboard_width, edges.expansion_gap)
 
         # 铺装区 minx/miny（用于对齐搜索）
@@ -96,7 +94,7 @@ def optimize_multi(room_specs, board, edges, kerf, installation=None, **kwargs):
     independent_boards = []
     for rs, pat, d, r, offset in room_best:
         room_area = compute_layout_area(
-            box(0, 0, rs.width, rs.length),
+            build_room(rs),
             edges.baseboard_width, edges.expansion_gap)
         kwa = {'board_gap': edges.board_gap, 'kerf': kerf}
         if r is not None:
@@ -117,7 +115,7 @@ def optimize_multi(room_specs, board, edges, kerf, installation=None, **kwargs):
         for idx in perm:
             rs, pat, d, r, offset = room_best[idx]
             room_area = compute_layout_area(
-                box(0, 0, rs.width, rs.length),
+                build_room(rs),
                 edges.baseboard_width, edges.expansion_gap)
             kwa = {'board_gap': edges.board_gap, 'kerf': kerf,
                    'label_start': label_start}
@@ -179,7 +177,7 @@ def optimize_multi(room_specs, board, edges, kerf, installation=None, **kwargs):
         total_n = 0
         for (rs, pat, d, r, offset), n_boards in zip(room_best, independent_boards):
             room_area = compute_layout_area(
-                box(0, 0, rs.width, rs.length),
+                build_room(rs),
                 edges.baseboard_width, edges.expansion_gap)
             kwa = {'board_gap': edges.board_gap, 'kerf': kerf,
                    'label_start': label_start}

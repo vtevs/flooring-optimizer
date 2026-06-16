@@ -7,7 +7,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from shapely.geometry import Polygon
 
 from floorplan.geometry.room import build_room, compute_layout_area
-from floorplan.models import RoomConfig, NotchConfig, NotchPosition
+from floorplan.models import RoomConfig, RoomSpec, ObstacleConfig, NotchConfig, NotchPosition
 
 
 class TestBuildRoom:
@@ -64,6 +64,31 @@ class TestBuildRoom:
         cfg = RoomConfig(type="rectangle", width=3000, length=4000, notch=None)
         room = build_room(cfg)
         assert abs(room.area - 12_000_000) < 1
+
+
+
+    def test_polygon_room(self):
+        """多边形房间"""
+        cfg = RoomSpec(
+            name="A", type="polygon",
+            points=[(0, 0), (3254, 0), (3254, 3460), (1063, 3460), (1063, 5447), (0, 5447)],
+        )
+        room = build_room(cfg)
+        expected = 3254 * 3460 + 1063 * 1987
+        assert abs(room.area - expected) < 1
+
+    def test_obstacle_is_removed_before_expansion_gap(self):
+        """柜子区域不铺装，并且伸缩缝预留到柜子边缘"""
+        cfg = RoomSpec(
+            name="C", type="rectangle", width=2856, length=3462,
+            obstacles=[ObstacleConfig(name="wardrobe", type="rectangle", x=0, y=2862, width=1830, length=600)],
+        )
+        room = build_room(cfg)
+        assert abs(room.area - (2856 * 3462 - 1830 * 600)) < 1
+
+        layout = compute_layout_area(room, baseboard_width=15, expansion_gap=10)
+        cabinet_gap_probe = layout.intersection(Polygon([(5, 2867), (1825, 2867), (1825, 3457), (5, 3457)]))
+        assert cabinet_gap_probe.is_empty
 
 
 class TestLayoutArea:

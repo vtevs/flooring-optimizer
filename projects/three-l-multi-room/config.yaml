@@ -1,0 +1,72 @@
+# ============================================================
+# 多房间木地板铺装 — 三 L 拼（含 L 形房间与柜子不可铺装区域）
+# ============================================================
+# 坐标系: 左下角为 (0,0)，单位 mm。
+# 本文件使用当前多房间 polygon/obstacles 房间描述方案。
+# 用户约定: “长”为 X 方向，“宽”为 Y 方向。
+#
+# 房间 A:
+# - 主矩形 3254×3460mm。
+# - 左上角额外向上凸出一个 1063×1987mm 小矩形。
+# - 因此 A 使用 polygon 轮廓点描述。
+# ============================================================
+
+rooms:
+  - name: A-主卧
+    type: polygon
+    # 轮廓点按顺时针/逆时针均可；这里从左下角开始逆时针。
+    # 主矩形: (0,0) -> (3254,3460)
+    # 左上凸出: x=0..1063, y=3460..5447
+    points:
+      - [0, 0]
+      - [3254, 0]
+      - [3254, 3460]
+      - [1063, 3460]
+      - [1063, 5447]
+      - [0, 5447]
+    obstacles: []
+
+  - name: B-儿童房
+    type: rectangle
+    width: 2562      # X 方向长度
+    length: 3264     # Y 方向宽度
+    obstacles: []
+
+  - name: C-次卧
+    type: rectangle
+    width: 2856      # X 方向长度
+    length: 3462     # Y 方向宽度
+    obstacles:
+      - name: wardrobe
+        type: rectangle
+        # 左上角一排衣柜，长宽 1830×600mm。
+        # 以房间左下角为原点: x=0, y=3462-600=2862。
+        x: 0
+        y: 2862
+        width: 1830   # X 方向长度
+        length: 600   # Y 方向宽度
+
+board:
+  length: 600
+  width: 88
+  thickness: 18
+
+installation:
+  pattern: l-triple
+  direction: 0
+  stagger_ratio: 0.5
+
+edges:
+  baseboard_width: 15
+  expansion_gap: 10
+  board_gap: 0.5
+
+kerf: 1.0
+
+output:
+  file: floor_plan.svg
+  scale: auto
+  show_dimensions: true
+  show_labels: true
+  show_grid: false
+  color_scheme: wood

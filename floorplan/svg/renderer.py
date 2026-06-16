@@ -14,7 +14,7 @@ from pathlib import Path
 from shapely.geometry import Polygon, box
 from shapely import affinity
 from ..models import LayoutResult, OutputConfig
-from ..geometry.room import build_room
+from ..geometry.room import build_room, build_obstacles
 
 
 def render(result, room_config, output, filepath):
@@ -38,6 +38,10 @@ def render(result, room_config, output, filepath):
         '<style>',
         '  .room      { fill: #fafafa; stroke: #333; stroke-width: 3; }',
         '  .area      { fill: none; stroke: #999; stroke-width: 1.5; stroke-dasharray: 8,4; }',
+        '  .obstacle  { fill: #ddd; fill-opacity: 0.75; stroke: #555; stroke-width: 2; }',
+        '  .ob-x      { stroke: #555; stroke-width: 2; }',
+        '  .obstacle  { fill: #ddd; fill-opacity: 0.75; stroke: #555; stroke-width: 2; }',
+        '  .ob-x      { stroke: #555; stroke-width: 2; }',
         '  .board     { fill: #e8d5b0; stroke: #b8945c; stroke-width: 1; }',
         '  .cut-full  { fill: none; stroke: #bbb; stroke-width: 0.8; stroke-dasharray: 3,3; }',
         '  .cut-used  { fill: #d4b896; stroke: #c44; stroke-width: 2; }',
@@ -209,12 +213,10 @@ def render_multi(multi_result, config, filepath):
 
     房间水平排列，每个房间独立缩放。
     """
-    from ..models import RoomConfig as RC, OutputConfig
-
     board = config.board
     rooms_data = []
     for rs, room_result in multi_result.room_results:
-        room = box(0, 0, rs.width, rs.length)
+        room = build_room(rs)
         minx, miny, maxx, maxy = room.bounds
         expansion_gap = getattr(config.edges, 'expansion_gap', 10)
         layout_area = room.buffer(-expansion_gap, join_style=2)
@@ -222,6 +224,7 @@ def render_multi(multi_result, config, filepath):
             'name': rs.name,
             'result': room_result,
             'room': room,
+            'obstacles': build_obstacles(rs),
             'layout_area': layout_area,
             'w': maxx - minx,
             'h': maxy - miny,
@@ -256,6 +259,8 @@ def render_multi(multi_result, config, filepath):
         '<style>',
         '  .room      { fill: #fafafa; stroke: #333; stroke-width: 3; }',
         '  .area      { fill: none; stroke: #999; stroke-width: 1.5; stroke-dasharray: 8,4; }',
+        '  .obstacle  { fill: #ddd; fill-opacity: 0.75; stroke: #555; stroke-width: 2; }',
+        '  .ob-x      { stroke: #555; stroke-width: 2; }',
         '  .board     { fill: #e8d5b0; stroke: #b8945c; stroke-width: 1; }',
         '  .cut-full  { fill: none; stroke: #bbb; stroke-width: 0.8; stroke-dasharray: 3,3; }',
         '  .cut-used  { fill: #d4b896; stroke: #c44; stroke-width: 2; }',
@@ -280,6 +285,7 @@ def render_multi(multi_result, config, filepath):
         result = d['result']
         room = d['room']
         layout_area = d['layout_area']
+        obstacles = d.get('obstacles', [])
         scale = d['scale']
         w, h = d['w'], d['h']
         minx, miny, maxx, maxy = d['bounds']
@@ -299,6 +305,11 @@ def render_multi(multi_result, config, filepath):
 
         # 房间轮廓
         svg.append(_poly_svg_scaled(room, 'room', 0, 0, scale, h))
+
+        # 柜子/固定障碍物
+        for obs in obstacles:
+            svg.append(_poly_svg_scaled(obs, 'obstacle', 0, 0, scale, h))
+            _add_obstacle_cross_scaled(svg, obs, scale, h)
 
         # 地板
         for b in result.boards:
@@ -410,3 +421,11 @@ def _add_tg_edges_scaled(svg, b, scale, room_h):
     tl, tr = sc[3], sc[2]
     svg.append(f'<line x1="{bl[0]:.1f}" y1="{bl[1]:.1f}" x2="{br[0]:.1f}" y2="{br[1]:.1f}" class="edge-t"/>')
     svg.append(f'<line x1="{tl[0]:.1f}" y1="{tl[1]:.1f}" x2="{tr[0]:.1f}" y2="{tr[1]:.1f}" class="edge-g"/>')
+
+
+def _add_obstacle_cross_scaled(svg, poly, scale, room_h):
+    minx, miny, maxx, maxy = poly.bounds
+    x1, y1 = minx * scale, (room_h - miny) * scale
+    x2, y2 = maxx * scale, (room_h - maxy) * scale
+    svg.append(f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" class="ob-x"/>')
+    svg.append(f'<line x1="{x1:.1f}" y1="{y2:.1f}" x2="{x2:.1f}" y2="{y1:.1f}" class="ob-x"/>')

@@ -12,6 +12,7 @@ import yaml
 from .models import (
     Config, RoomConfig, RoomSpec, BoardConfig, InstallationConfig,
     EdgeConfig, OutputConfig, NotchConfig, NotchPosition, Pattern,
+    ObstacleConfig,
 )
 
 
@@ -63,36 +64,42 @@ def _parse_and_validate(raw: dict) -> Config:
         room_specs = []
         for i, r in enumerate(rooms_raw):
             name = r.get("name", f"房间{i+1}")
-            w = _require_positive(r, "width", f"rooms[{i}]")
-            h = _require_positive(r, "length", f"rooms[{i}]")
-            room_specs.append(RoomSpec(name=name, width=w, length=h))
+            room_type = r.get("type", "rectangle")
+            _validate_room_type(room_type)
+            notch = _parse_notch(r, f"rooms[{i}]", required=(room_type == "l-shaped"))
+            points = _parse_points(r, f"rooms[{i}]", required=(room_type == "polygon"))
+            if room_type == "polygon":
+                w, h = _bounds_from_points(points)
+            else:
+                w = _require_positive(r, "width", f"rooms[{i}]")
+                h = _require_positive(r, "length", f"rooms[{i}]")
+            if notch and (notch.width > w or notch.depth > h):
+                raise ValueError("缺口尺寸不能超过房间总尺寸")
+            room_specs.append(RoomSpec(
+                name=name, type=room_type, width=w, length=h,
+                notch=notch, points=points,
+                obstacles=_parse_obstacles(r.get("obstacles", []), f"rooms[{i}].obstacles"),
+            ))
     else:
         # 单房间模式
         room_raw = raw.get("room")
         if room_raw is None:
             raise ValueError("缺少 [room] 或 [rooms] 配置节")
         room_type = room_raw.get("type", "rectangle")
-        if room_type not in ("rectangle", "l-shaped"):
-            raise ValueError(f"无效的房间类型: {room_type}")
+        _validate_room_type(room_type)
+        notch = _parse_notch(room_raw, "room", required=(room_type == "l-shaped"))
+        points = _parse_points(room_raw, "room", required=(room_type == "polygon"))
+        if room_type == "polygon":
+            w, h = _bounds_from_points(points)
+        else:
+            w = _require_positive(room_raw, "width", "room")
+            h = _require_positive(room_raw, "length", "room")
         room = RoomConfig(
-            type=room_type,
-            width=_require_positive(room_raw, "width", "room"),
-            length=_require_positive(room_raw, "length", "room"),
+            type=room_type, width=w, length=h, notch=notch, points=points,
+            obstacles=_parse_obstacles(room_raw.get("obstacles", []), "room.obstacles"),
         )
-        if room_type == "l-shaped":
-            notch_raw = room_raw.get("notch")
-            if notch_raw is None:
-                raise ValueError("L 形房间需要配置 [room.notch]")
-            pos = notch_raw.get("position", "top-left")
-            if pos not in VALID_NOTCH_POSITIONS:
-                raise ValueError(f"无效的缺口位置: {pos}，可选: {VALID_NOTCH_POSITIONS}")
-            room.notch = NotchConfig(
-                width=_require_positive(notch_raw, "width", "room.notch"),
-                depth=_require_positive(notch_raw, "depth", "room.notch"),
-                position=NotchPosition(pos),
-            )
-            if room.notch.width > room.width or room.notch.depth > room.length:
-                raise ValueError("缺口尺寸不能超过房间总尺寸")
+        if room.notch and (room.notch.width > room.width or room.notch.depth > room.length):
+            raise ValueError("缺口尺寸不能超过房间总尺寸")
 
     # --- 地板 ---
     board_raw = raw.get("board")
@@ -162,6 +169,77 @@ def _parse_and_validate(raw: dict) -> Config:
         kerf=kerf,
     )
 
+
+
+def _validate_room_type(room_type: str):
+    if room_type not in ("rectangle", "l-shaped", "polygon"):
+        raise ValueError(f"无效的房间类型: {room_type}")
+
+
+def _parse_notch(raw: dict, section: str, required: bool = False):
+    notch_raw = raw.get("notch")
+    if notch_raw is None:
+        if required:
+            raise ValueError(f"L 形房间需要配置 [{section}.notch]")
+        return None
+    pos = notch_raw.get("position", "top-left")
+    if pos not in VALID_NOTCH_POSITIONS:
+        raise ValueError(f"无效的缺口位置: {pos}，可选: {VALID_NOTCH_POSITIONS}")
+    return NotchConfig(
+        width=_require_positive(notch_raw, "width", f"{section}.notch"),
+        depth=_require_positive(notch_raw, "depth", f"{section}.notch"),
+        position=NotchPosition(pos),
+    )
+
+
+def _parse_points(raw: dict, section: str, required: bool = False):
+    points_raw = raw.get("points")
+    if points_raw is None:
+        if required:
+            raise ValueError(f"多边形房间需要配置 [{section}.points]")
+        return []
+    if not isinstance(points_raw, list) or len(points_raw) < 3:
+        raise ValueError(f"[{section}.points] 至少需要 3 个点")
+    points = []
+    for idx, pt in enumerate(points_raw):
+        if not isinstance(pt, (list, tuple)) or len(pt) != 2:
+            raise ValueError(f"[{section}.points[{idx}]] 必须是 [x, y]")
+        x, y = float(pt[0]), float(pt[1])
+        points.append((x, y))
+    return points
+
+
+def _bounds_from_points(points: list[tuple[float, float]]) -> tuple[float, float]:
+    xs = [p[0] for p in points]
+    ys = [p[1] for p in points]
+    return max(xs) - min(xs), max(ys) - min(ys)
+
+
+def _parse_obstacles(obstacles_raw, section: str):
+    if obstacles_raw is None:
+        return []
+    if not isinstance(obstacles_raw, list):
+        raise ValueError(f"[{section}] 需为列表")
+    obstacles = []
+    for i, raw in enumerate(obstacles_raw):
+        typ = raw.get("type", "rectangle")
+        name = raw.get("name", f"obstacle{i+1}")
+        if typ == "rectangle":
+            obstacles.append(ObstacleConfig(
+                name=name, type=typ,
+                x=float(raw.get("x", 0.0)),
+                y=float(raw.get("y", 0.0)),
+                width=_require_positive(raw, "width", f"{section}[{i}]"),
+                length=_require_positive(raw, "length", f"{section}[{i}]"),
+            ))
+        elif typ == "polygon":
+            obstacles.append(ObstacleConfig(
+                name=name, type=typ,
+                points=_parse_points(raw, f"{section}[{i}]", required=True),
+            ))
+        else:
+            raise ValueError(f"无效的障碍物类型: {typ}")
+    return obstacles
 
 def _require_positive(d: dict, key: str, section: str) -> float:
     """获取正数值字段，缺失或非正数抛出 ValueError"""

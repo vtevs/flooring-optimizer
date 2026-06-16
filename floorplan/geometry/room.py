@@ -8,7 +8,7 @@ L 形房间 = 包围矩形 - 角落缺口
 - 可排样区域计算
 """
 
-from shapely.geometry import Polygon, Point
+from shapely.geometry import Polygon, Point, box
 from shapely import affinity
 
 from ..models import RoomConfig, NotchConfig, NotchPosition
@@ -28,8 +28,17 @@ def build_room(config: RoomConfig) -> Polygon:
     """
     w, h = config.width, config.length
 
+    if config.type == "polygon":
+        if not getattr(config, 'points', None):
+            raise ValueError("多边形房间需要 points")
+        room = Polygon(config.points)
+        if not room.is_valid:
+            raise ValueError("房间多边形无效")
+        return _subtract_obstacles(room, getattr(config, 'obstacles', []))
+
     if config.type == "rectangle" or config.notch is None:
-        return Polygon([(0, 0), (w, 0), (w, h), (0, h)])
+        room = Polygon([(0, 0), (w, 0), (w, h), (0, h)])
+        return _subtract_obstacles(room, getattr(config, 'obstacles', []))
 
     # L 形：包围矩形减去角落缺口
     notch = config.notch
@@ -54,7 +63,31 @@ def build_room(config: RoomConfig) -> Polygon:
     if room.is_empty:
         raise ValueError("缺口尺寸过大，房间面积为 0")
 
-    return room
+    return _subtract_obstacles(room, getattr(config, 'obstacles', []))
+
+
+def build_obstacles(config) -> list[Polygon]:
+    return [_build_obstacle(o) for o in getattr(config, 'obstacles', [])]
+
+
+def _subtract_obstacles(room: Polygon, obstacles) -> Polygon:
+    result = room
+    for obs in obstacles:
+        result = result.difference(_build_obstacle(obs))
+    if result.is_empty:
+        raise ValueError("障碍物尺寸过大，房间可用面积为 0")
+    return result
+
+
+def _build_obstacle(obs) -> Polygon:
+    if obs.type == "rectangle":
+        return box(obs.x, obs.y, obs.x + obs.width, obs.y + obs.length)
+    if obs.type == "polygon":
+        poly = Polygon(obs.points)
+        if not poly.is_valid:
+            raise ValueError(f"障碍物多边形无效: {obs.name}")
+        return poly
+    raise ValueError(f"未知障碍物类型: {obs.type}")
 
 
 def compute_layout_area(room: Polygon,
