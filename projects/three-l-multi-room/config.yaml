@@ -24,7 +24,13 @@ rooms:
       - [1063, 3460]
       - [1063, 5447]
       - [0, 5447]
-    obstacles: []
+    obstacles:
+      - name: wardrobe
+        type: rectangle
+        x: 1063
+        y: 3460
+        width: 2191   # X 方向长度
+        length: 600   # Y 方向宽度
 
   - name: B-儿童房
     type: rectangle
