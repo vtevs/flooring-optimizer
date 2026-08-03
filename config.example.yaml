@@ -37,6 +37,9 @@ board:
   length: 600
   width: 88
   thickness: 18
+
+material:
+  type: wood
   tongue_groove:
     left_long_edge: groove
     right_long_edge: tongue
@@ -47,6 +50,8 @@ installation:
   pattern: l-triple
   direction: 0
   stagger_ratio: 0.5
+  require_full_board_at_room_corner: true
+  require_full_board_at_room_bottom_left: false
   expansion_gap: 10
   board_gap: 0.5
   cutting_loss: 3

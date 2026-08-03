@@ -58,6 +58,13 @@ def main(config_file: str, output: str | None):
         direction=config.installation.direction,
         stagger_ratio=config.installation.stagger_ratio,
         kerf=config.kerf,
+        material_type=config.material.type,
+        require_full_board_at_room_corner=(
+            config.installation.require_full_board_at_room_corner
+        ),
+        require_full_board_at_room_bottom_left=(
+            config.installation.require_full_board_at_room_bottom_left
+        ),
     )
 
     # 4. 输出统计
@@ -332,7 +339,8 @@ def _run_multi_room(config, output):
                f"方向: {config.installation.direction}°")
     click.echo("正在计算最优综合方案（枚举房间顺序）...")
     result = optimize_multi(config.rooms, config.board, config.edges, config.kerf,
-                            installation=config.installation)
+                            installation=config.installation,
+                            material_type=config.material.type)
 
     # 综合利用率 = 房间总面积 / (总用板数 × 单板面积)
     board_area = config.board.length * config.board.width

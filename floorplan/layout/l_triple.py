@@ -32,7 +32,7 @@ class LTripleEngine(LayoutEngine):
         gap = kwargs.get('board_gap', 0.0)
         pitch = W + gap
         kf = kwargs.get('kerf', 1.0)
-        pool = kwargs.get('pool') or BoardPool(L, kerf=kf, board_width=W)
+        pool = kwargs.get('pool') or BoardPool(L, kerf=kf, board_width=W, material_type=kwargs.get('material_type', 'wood'))
         label_offset = kwargs.get('label_start', 0)
 
         placed = []

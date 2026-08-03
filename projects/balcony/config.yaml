@@ -1,0 +1,47 @@
+# ============================================================
+# 多房间木地板铺装 — 三 L 拼（含 L 形房间与柜子不可铺装区域）
+# ============================================================
+# 坐标系: 左下角为 (0,0)，单位 mm。
+# 本文件使用当前多房间 polygon/obstacles 房间描述方案。
+# 用户约定: “长”为 X 方向，“宽”为 Y 方向。
+#
+# 房间 A:
+# - 主矩形 3254×3460mm。
+# - 左上角额外向上凸出一个 1063×1987mm 小矩形。
+# - 因此 A 使用 polygon 轮廓点描述。
+# ============================================================
+
+rooms:
+  - name: balcony-阳台
+    type: rectangle
+    width: 6000      # X 方向长度
+    length: 1350     # Y 方向宽度
+    obstacles: []
+
+board:
+  length: 900
+  width: 150
+  thickness: 10
+
+material:
+  type: tile
+
+installation:
+  pattern: l-triple
+  direction: 0
+  stagger_ratio: 0.5
+
+edges:
+  baseboard_width: 0
+  expansion_gap: 0
+  board_gap: 2
+
+kerf: 2.0
+
+output:
+  file: floor_plan.svg
+  scale: auto
+  show_dimensions: true
+  show_labels: true
+  show_grid: false
+  color_scheme: wood

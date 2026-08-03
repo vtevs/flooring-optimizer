@@ -15,9 +15,19 @@ from .models import (Pattern, BoardConfig, RoomSpec, LayoutResult,
 from .layout import ENGINES
 from .layout.board_pool import BoardPool
 from .geometry.room import build_room, compute_layout_area
+from .corner_rule import has_full_board_at_room_corner
 
 
 def optimize_multi(room_specs, board, edges, kerf, installation=None, **kwargs):
+    require_corner = bool(
+        getattr(installation, 'require_full_board_at_room_corner', False)
+    )
+    require_bottom_left = bool(
+        getattr(installation, 'require_full_board_at_room_bottom_left', False)
+    )
+    raw_material_type = kwargs.pop('material_type', 'wood')
+    material_type = getattr(raw_material_type, 'value', raw_material_type)
+
     if installation is not None:
         patterns = [installation.pattern]
         directions = [installation.direction]
@@ -41,48 +51,71 @@ def optimize_multi(room_specs, board, edges, kerf, installation=None, **kwargs):
             build_room(rs),
             edges.baseboard_width, edges.expansion_gap)
 
-        # 铺装区 minx/miny（用于对齐搜索）
-        minx, miny = room_area.bounds[0], room_area.bounds[1]
-
         best_r, best_cfg = None, None
         for pat in patterns:
             for d in directions:
                 for r in (stagger_ratios if pat == Pattern.STAGGERED else [None]):
                     engine = ENGINES[pat]()
-                    kwa = {'board_gap': edges.board_gap, 'kerf': kerf}
+                    kwa = {'board_gap': edges.board_gap, 'kerf': kerf, 'material_type': material_type}
                     if r is not None:
                         kwa['stagger_ratio'] = r
 
                     # 搜索偏移：从负值开始以覆盖铺装区边界对齐
-                    offsets_x = _make_offsets(-coarse_x, L, coarse_x, lo=-coarse_x, hi=L)
-                    offsets_y = _make_offsets(-coarse_y, W, coarse_y, lo=-coarse_y, hi=W)
+                    rx, ry, _, _ = room_area.bounds
+                    if require_bottom_left:
+                        offsets_x = [rx]
+                        offsets_y = [ry]
+                    else:
+                        offsets_x = _make_offsets(-coarse_x, L, coarse_x, lo=-coarse_x, hi=L)
+                        offsets_y = _make_offsets(-coarse_y, W, coarse_y, lo=-coarse_y, hi=W)
+                    if require_corner and not require_bottom_left:
+                        offsets_x = _include_values(offsets_x, [rx], -coarse_x, L)
+                        offsets_y = _include_values(offsets_y, [ry], -coarse_y, W)
 
                     for xo in offsets_x:
                         for yo in offsets_y:
                             res = engine.layout(room_area, board,
                                                start_offset=(xo, yo),
                                                direction=d, **kwa)
+                            if require_corner and not has_full_board_at_room_corner(res, room_area):
+                                continue
                             if res.statistics.utilization <= 1.02:
                                 if (best_r is None or
                                     res.statistics.utilization > best_r.statistics.utilization):
                                     best_r, best_cfg = res, (pat, d, r, (xo, yo))
 
         if best_r is None:
+            if require_corner:
+                raise RuntimeError(
+                    f"Room {rs.name} no valid layout satisfying full-board corner rule"
+                )
             raise RuntimeError(f"Room {rs.name} no valid layout")
 
         # 局部精化：在最佳偏移附近细搜
         bx, by = best_cfg[3]  # best_cfg = (pat, direction, ratio, (xo, yo))
         fine_x = max(coarse_x / 4, 1.0)
         fine_y = max(coarse_y / 4, 1.0)
-        for xo in _make_offsets(bx - coarse_x, L, fine_x, lo=bx - coarse_x, hi=bx + coarse_x):
-            for yo in _make_offsets(by - coarse_y, W, fine_y, lo=by - coarse_y, hi=by + coarse_y):
+        rx, ry, _, _ = room_area.bounds
+        if require_bottom_left:
+            fine_offsets_x = [rx]
+            fine_offsets_y = [ry]
+        else:
+            fine_offsets_x = _make_offsets(bx - coarse_x, L, fine_x, lo=bx - coarse_x, hi=bx + coarse_x)
+            fine_offsets_y = _make_offsets(by - coarse_y, W, fine_y, lo=by - coarse_y, hi=by + coarse_y)
+        if require_corner and not require_bottom_left:
+            fine_offsets_x = _include_values(fine_offsets_x, [rx], bx - coarse_x, bx + coarse_x)
+            fine_offsets_y = _include_values(fine_offsets_y, [ry], by - coarse_y, by + coarse_y)
+        for xo in fine_offsets_x:
+            for yo in fine_offsets_y:
                 engine = ENGINES[best_cfg[0]]()
-                kwa = {'board_gap': edges.board_gap, 'kerf': kerf}
+                kwa = {'board_gap': edges.board_gap, 'kerf': kerf, 'material_type': material_type}
                 if best_cfg[2] is not None:
                     kwa['stagger_ratio'] = best_cfg[2]
                 res = engine.layout(room_area, board,
                                    start_offset=(xo, yo),
                                    direction=best_cfg[1], **kwa)
+                if require_corner and not has_full_board_at_room_corner(res, room_area):
+                    continue
                 if res.statistics.utilization <= 1.02:
                     if res.statistics.utilization > best_r.statistics.utilization:
                         best_r = res
@@ -96,7 +129,7 @@ def optimize_multi(room_specs, board, edges, kerf, installation=None, **kwargs):
         room_area = compute_layout_area(
             build_room(rs),
             edges.baseboard_width, edges.expansion_gap)
-        kwa = {'board_gap': edges.board_gap, 'kerf': kerf}
+        kwa = {'board_gap': edges.board_gap, 'kerf': kerf, 'material_type': material_type}
         if r is not None:
             kwa['stagger_ratio'] = r
         res = ENGINES[pat]().layout(room_area, board,
@@ -106,7 +139,7 @@ def optimize_multi(room_specs, board, edges, kerf, installation=None, **kwargs):
     # Phase 3: shared pool
     best_multi = None
     for perm in itertools.permutations(range(len(room_specs))):
-        pool = BoardPool(L, kerf=kerf, board_width=W)
+        pool = BoardPool(L, kerf=kerf, board_width=W, material_type=material_type)
         results = []
         combined_area = 0.0
         label_start = 0
@@ -118,7 +151,7 @@ def optimize_multi(room_specs, board, edges, kerf, installation=None, **kwargs):
                 build_room(rs),
                 edges.baseboard_width, edges.expansion_gap)
             kwa = {'board_gap': edges.board_gap, 'kerf': kerf,
-                   'label_start': label_start}
+                   'label_start': label_start, 'material_type': material_type}
             if r is not None:
                 kwa['stagger_ratio'] = r
 
@@ -168,7 +201,7 @@ def optimize_multi(room_specs, board, edges, kerf, installation=None, **kwargs):
 
     # Fallback: independent with shared numbering
     if best_multi is None or best_multi.total_boards > sum(independent_boards):
-        pool = BoardPool(L, kerf=kerf, board_width=W)
+        pool = BoardPool(L, kerf=kerf, board_width=W, material_type=material_type)
         ind_results = []
         comb_area = 0.0
         label_start = 0
@@ -180,7 +213,7 @@ def optimize_multi(room_specs, board, edges, kerf, installation=None, **kwargs):
                 build_room(rs),
                 edges.baseboard_width, edges.expansion_gap)
             kwa = {'board_gap': edges.board_gap, 'kerf': kerf,
-                   'label_start': label_start}
+                   'label_start': label_start, 'material_type': material_type}
             if r is not None:
                 kwa['stagger_ratio'] = r
             res = ENGINES[pat]().layout(room_area, board, pool=pool,
@@ -241,3 +274,11 @@ def _make_offsets(start: float, mod: float, step: float,
     if not offsets and lo is not None:
         offsets.append(lo)
     return offsets
+
+
+def _include_values(values, required, lo, hi):
+    result = list(values)
+    for value in required:
+        if lo - 0.5 <= value < hi + 0.5 and not any(abs(value - x) <= 1e-6 for x in result):
+            result.append(value)
+    return sorted(result)

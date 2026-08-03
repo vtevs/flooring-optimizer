@@ -12,7 +12,7 @@ import yaml
 from .models import (
     Config, RoomConfig, RoomSpec, BoardConfig, InstallationConfig,
     EdgeConfig, OutputConfig, NotchConfig, NotchPosition, Pattern,
-    ObstacleConfig,
+    ObstacleConfig, MaterialConfig, MaterialType,
 )
 
 
@@ -22,6 +22,7 @@ from .models import (
 VALID_PATTERNS = {p.value for p in Pattern}
 VALID_NOTCH_POSITIONS = {p.value for p in NotchPosition}
 VALID_DIRECTIONS = {0, 45, 90}
+VALID_MATERIAL_TYPES = {m.value for m in MaterialType}
 
 
 def load_config(path: str | Path) -> Config:
@@ -129,6 +130,14 @@ def _parse_and_validate(raw: dict) -> Config:
         pattern=Pattern(pattern_str),
         direction=float(direction),
         stagger_ratio=float(stagger_ratio),
+        require_full_board_at_room_corner=_parse_bool(
+            inst_raw.get("require_full_board_at_room_corner", False),
+            "installation.require_full_board_at_room_corner",
+        ),
+        require_full_board_at_room_bottom_left=_parse_bool(
+            inst_raw.get("require_full_board_at_room_bottom_left", False),
+            "installation.require_full_board_at_room_bottom_left",
+        ),
     )
 
     # --- 收边 ---
@@ -143,6 +152,19 @@ def _parse_and_validate(raw: dict) -> Config:
                        ("板间缝", edges.board_gap)]:
         if val < 0:
             raise ValueError(f"{name}不能为负: {val}")
+
+    # --- 材料 ---
+    material_raw = raw.get("material", {})
+    if material_raw is None:
+        material_raw = {}
+    if not isinstance(material_raw, dict):
+        raise ValueError("[material] 需为配置对象")
+    material_type_str = material_raw.get("type", MaterialType.WOOD.value)
+    if material_type_str not in VALID_MATERIAL_TYPES:
+        raise ValueError(
+            f"无效的材料类型: {material_type_str}，可选: {VALID_MATERIAL_TYPES}"
+        )
+    material = MaterialConfig(type=MaterialType(material_type_str))
 
     # --- 输出 ---
     out_raw = raw.get("output", {})
@@ -166,6 +188,7 @@ def _parse_and_validate(raw: dict) -> Config:
         installation=installation,
         edges=edges,
         output=output,
+        material=material,
         kerf=kerf,
     )
 
@@ -250,3 +273,15 @@ def _require_positive(d: dict, key: str, section: str) -> float:
     if val <= 0:
         raise ValueError(f"[{section}].{key} 必须为正数，当前值: {val}")
     return val
+
+
+def _parse_bool(value, section: str) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        lowered = value.strip().lower()
+        if lowered in {"true", "yes", "1", "on"}:
+            return True
+        if lowered in {"false", "no", "0", "off"}:
+            return False
+    raise ValueError(f"[{section}] 必须为布尔值: {value}")

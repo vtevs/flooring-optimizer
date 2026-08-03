@@ -19,10 +19,12 @@ class PoolEntry:
 
 
 class BoardPool:
-    def __init__(self, board_length: float, kerf: float = 1.0, board_width: float = 148.0):
+    def __init__(self, board_length: float, kerf: float = 1.0,
+                 board_width: float = 148.0, material_type='wood'):
         self._L = board_length
         self._W = board_width
         self._K = kerf
+        self._material_type = getattr(material_type, 'value', material_type)
         self._pool: list[PoolEntry] = []
         self._new = 0         # 新板消耗计数
         self._reused = 0      # 池复用次数
@@ -244,7 +246,7 @@ class BoardPool:
         for i, e in enumerate(self._pool):
             if e.width is not None:
                 continue
-            if required_edges is not None and e.edges is not None:
+            if self._edge_matching_enabled() and required_edges is not None and e.edges is not None:
                 if not _pool_edges_match(e.edges, required_edges, rotation):
                     continue
             if needed - tolerance <= e.length < best_len:
@@ -257,15 +259,15 @@ class BoardPool:
         parent_id = e.source_id  # 追溯用的父 ID
 
         reuse_sid = self._next_reuse_id(parent_id, 'L')
+        remain = e.length - actual - self._K
         self._groups[reuse_sid] = dict(
             source_id=reuse_sid, parent_source_id=parent_id,
             pieces=[dict(label=label, length=actual)],
             total_length=e.length, used_length=actual,
-            waste_length=e.length - actual,
+            waste_length=max(0.0, remain),
             width_waste=0.0, total_width=self._W,
         )
 
-        remain = e.length - actual - self._K
         if remain > 0.5:
             # 剩余部分继承原条目的四边（同一个物理区）
             self._pool.append(PoolEntry(remain, reuse_sid, edges=e.edges))
@@ -286,7 +288,7 @@ class BoardPool:
         for i, e in enumerate(self._pool):
             if e.width is None:
                 continue
-            if required_edges is not None and e.edges is not None:
+            if self._edge_matching_enabled() and required_edges is not None and e.edges is not None:
                 if not _pool_edges_match(e.edges, required_edges, rotation):
                     continue
             if needed_w - self._K <= e.width < best_w:
@@ -309,6 +311,9 @@ class BoardPool:
         )
         # 多余宽度不回池（第三条）
         return reuse_sid
+
+    def _edge_matching_enabled(self) -> bool:
+        return self._material_type != 'tile'
 
     def take_or_cut(self, needed: float, label: str,
                      required_edges=None, rotation: float = 0) -> str:

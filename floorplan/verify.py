@@ -11,14 +11,15 @@ from shapely.geometry import Polygon, box as sbox
 from shapely import affinity
 from shapely.ops import unary_union
 
-from .models import LayoutResult, MultiRoomResult, Config
+from .models import LayoutResult, MultiRoomResult, Config, MaterialType
 from .geometry.room import build_room, compute_layout_area
 
 
 def verify_layout(result: LayoutResult, config: Config) -> list[str]:
     errors = []
     errors.extend(_verify_cutting_ops(result, config))
-    errors.extend(_verify_edges(result, config))
+    if not _is_tile_config(config):
+        errors.extend(_verify_edges(result, config))
     errors.extend(_verify_coverage(result, config))
     return errors
 
@@ -109,10 +110,15 @@ def verify_multi(multi_result: MultiRoomResult, config: Config) -> list[str]:
     errors = []
     for rs, room_result in multi_result.room_results:
         errors.extend(_verify_cutting_ops(room_result, config, room_label=rs.name))
-        errors.extend(_verify_edges(room_result, config, room_label=rs.name))
+        if not _is_tile_config(config):
+            errors.extend(_verify_edges(room_result, config, room_label=rs.name))
         errors.extend(_verify_coverage(room_result, config, room_label=rs.name,
                                        room_width=rs.width, room_length=rs.length))
     return errors
+
+
+def _is_tile_config(config: Config) -> bool:
+    return getattr(getattr(config, 'material', None), 'type', None) == MaterialType.TILE
 
 
 def _board_full_polygon(b):
@@ -399,14 +405,18 @@ def _verify_coverage(result: LayoutResult, config: Config,
     if outside.area > room.area * 0.005:
         errors.append(f"{prefix}铺装超出房间边界 {outside.area/1e6:.4f} m²")
 
-    uncovered = layout_area.difference(covered.buffer(0.5))
+    gap = getattr(config.edges, 'board_gap', 0.0)
+    gap_tolerance = max(0.5, gap / 2 + 0.5)
+    covered_for_gap = covered.buffer(gap_tolerance)
+
+    uncovered = layout_area.difference(covered_for_gap)
     if uncovered.area > layout_area.area * 0.005:
         errors.append(
             f"{prefix}可铺区域未完全覆盖 — "
             f"遗漏 {uncovered.area/1e6:.4f} m²")
 
     if layout_area.area > 0:
-        coverage = covered.intersection(layout_area).area / layout_area.area
+        coverage = covered_for_gap.intersection(layout_area).area / layout_area.area
         if coverage < 0.99:
             errors.append(f"{prefix}覆盖率不足: {coverage*100:.1f}%")
 

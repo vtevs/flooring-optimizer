@@ -8,7 +8,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from floorplan.config import load_config
-from floorplan.models import Pattern, NotchPosition
+from floorplan.models import Pattern, NotchPosition, MaterialType
 
 
 class TestConfigLoading:
@@ -76,10 +76,13 @@ board:
         cfg = _parse(yaml)
         assert cfg.installation.pattern == Pattern.ALIGNED
         assert cfg.installation.direction == 0.0
+        assert cfg.installation.require_full_board_at_room_corner is False
+        assert cfg.installation.require_full_board_at_room_bottom_left is False
         assert cfg.edges.baseboard_width == 15.0
         assert cfg.edges.expansion_gap == 10.0
         assert cfg.edges.board_gap == 0.0
         assert cfg.output.file == "floor_plan.svg"
+        assert cfg.material.type == MaterialType.WOOD
 
     def test_herringbone_pattern(self):
         """人字拼配置"""
@@ -145,14 +148,34 @@ board:
   width: 88
 installation:
   pattern: l-triple
+  require_full_board_at_room_corner: true
+  require_full_board_at_room_bottom_left: true
 """
         cfg = _parse(yaml)
 
         assert cfg.rooms[0].type == "polygon"
+        assert cfg.installation.require_full_board_at_room_corner is True
+        assert cfg.installation.require_full_board_at_room_bottom_left is True
         assert cfg.rooms[0].points[-1] == (0.0, 5447.0)
         assert cfg.rooms[1].obstacles[0].name == "wardrobe"
         assert cfg.rooms[1].obstacles[0].x == 0
         assert cfg.rooms[1].obstacles[0].length == 600
+
+
+    def test_tile_material_config(self):
+        yaml = """
+room:
+  type: rectangle
+  width: 3000
+  length: 4000
+board:
+  length: 900
+  width: 150
+material:
+  type: tile
+"""
+        cfg = _parse(yaml)
+        assert cfg.material.type == MaterialType.TILE
 
 
 class TestConfigValidation:
@@ -215,6 +238,15 @@ board: {length: 100, width: 50}
             _parse("""
 room: {type: l-shaped, width: 1000, length: 1000, notch: {width: 500, depth: 500, position: middle}}
 board: {length: 100, width: 50}
+""")
+
+
+    def test_invalid_material_type(self):
+        with pytest.raises(ValueError, match="无效的材料类型"):
+            _parse("""
+room: {type: rectangle, width: 100, length: 100}
+board: {length: 100, width: 50}
+material: {type: carpet}
 """)
 
 

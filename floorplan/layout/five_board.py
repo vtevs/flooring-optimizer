@@ -26,7 +26,7 @@ class FiveBoardSquareEngine(LayoutEngine):
         boards_per_unit = max(5, math.ceil(square_inner / unit_pitch))
 
         minx, miny, maxx, maxy = room.bounds
-        pool = BoardPool(L, kerf=kerf)
+        pool = BoardPool(L, kerf=kerf, board_width=W, material_type=kwargs.get('material_type', 'wood'))
         placed = []
         n = 0
 

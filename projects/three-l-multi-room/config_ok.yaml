@@ -24,13 +24,7 @@ rooms:
       - [1063, 3460]
       - [1063, 5447]
       - [0, 5447]
-    obstacles:
-      - name: wardrobe
-        type: rectangle
-        x: 1063
-        y: 2860
-        width: 2191   # X 方向长度
-        length: 600   # Y 方向宽度
+    obstacles: []
 
   - name: B-儿童房
     type: rectangle
@@ -53,22 +47,22 @@ rooms:
         length: 600   # Y 方向宽度
 
 board:
-  length: 600
-  width: 88
+  length: 610
+  width: 92
   thickness: 18
 
 installation:
   pattern: l-triple
   direction: 0
   stagger_ratio: 0.5
-  require_full_board_at_room_bottom_left: true
+  require_full_board_at_room_corner: false
 
 edges:
-  baseboard_width: 15
-  expansion_gap: 10
-  board_gap: 0.5
+  baseboard_width: 30
+  expansion_gap: 20
+  board_gap: 0
 
-kerf: 1.0
+kerf: 1.5
 
 output:
   file: floor_plan.svg

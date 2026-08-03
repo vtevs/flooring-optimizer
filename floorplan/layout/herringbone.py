@@ -104,7 +104,7 @@ class HerringboneEngine(LayoutEngine):
         # ---- 转回原坐标系 ----
         placed: list[PlacedBoard] = []
         kf = kwargs.get('kerf', 1.0)
-        pool = BoardPool(L, kerf=kf)
+        pool = BoardPool(L, kerf=kf, board_width=W, material_type=kwargs.get('material_type', 'wood'))
         for c in kept:
             poly_orig = affinity.rotate(c['poly'], 45, origin=(0, 0))
             is_cut = c['poly'].area < L * W * 0.99

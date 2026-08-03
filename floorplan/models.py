@@ -29,6 +29,11 @@ class NotchPosition(Enum):
     BOTTOM_RIGHT = "bottom-right"
 
 
+class MaterialType(Enum):
+    WOOD = "wood"
+    TILE = "tile"
+
+
 # ---------------------------------------------------------------------------
 # 配置相关
 # ---------------------------------------------------------------------------
@@ -73,11 +78,19 @@ class BoardConfig:
 
 
 @dataclass
+class MaterialConfig:
+    """材料配置"""
+    type: MaterialType = MaterialType.WOOD
+
+
+@dataclass
 class InstallationConfig:
     """铺装参数"""
     pattern: Pattern
     direction: float = 0.0       # 0/90/45 度
     stagger_ratio: float = 0.33  # 仅错缝
+    require_full_board_at_room_corner: bool = False
+    require_full_board_at_room_bottom_left: bool = False
 
 
 @dataclass
@@ -131,6 +144,7 @@ class Config:
     installation: InstallationConfig = None
     edges: EdgeConfig = field(default_factory=EdgeConfig)
     output: OutputConfig = field(default_factory=OutputConfig)
+    material: MaterialConfig = field(default_factory=MaterialConfig)
     kerf: float = 1.0
 
 
