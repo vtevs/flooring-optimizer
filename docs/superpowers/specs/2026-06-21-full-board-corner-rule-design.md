@@ -59,4 +59,4 @@ Coverage should include:
 - YAML parsing explicit `true`;
 - helper-level detection for a full board at an installable room corner;
 - rejection when the corner is only covered by cut boards;
-- multi-room optimization with the rule enabled using `config_ok.yaml`.
+- multi-room optimization with the rule enabled using `config-full-board-corner.yaml`.

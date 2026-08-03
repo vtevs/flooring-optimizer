@@ -48,10 +48,10 @@
 ### Task 4: Example Config And Verification
 
 **Files:**
-- Modify: `projects/three-l-multi-room/config_ok.yaml`
-- Generated: `projects/three-l-multi-room/output_ok/floor_plan.svg`
-- Generated: `projects/three-l-multi-room/output_ok/cutting_plan.txt`
+- Modify: `projects/home-wood-l-triple/config-full-board-corner.yaml`
+- Local generated output: `projects/home-wood-l-triple/output-full-board-corner/floor_plan.svg`
+- Local generated output: `projects/home-wood-l-triple/output-full-board-corner/cutting_plan.txt`
 
-- [ ] Enable `require_full_board_at_room_corner: true` in `config_ok.yaml`.
-- [ ] Run `python -m floorplan projects/three-l-multi-room/config_ok.yaml -o projects/three-l-multi-room/output_ok`.
+- [ ] Enable `require_full_board_at_room_corner: true` in `config-full-board-corner.yaml`.
+- [ ] Run `python -m floorplan projects/home-wood-l-triple/config-full-board-corner.yaml -o projects/home-wood-l-triple/output-full-board-corner`.
 - [ ] Run `python -m pytest tests/ -q`.

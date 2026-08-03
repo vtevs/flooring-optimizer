@@ -23,20 +23,20 @@ pip install pytest
 当前正式示例配置在：
 
 ```text
-projects/three-l-multi-room/config.yaml
+projects/home-wood-l-triple/config.yaml
 ```
 
 从仓库根目录运行：
 
 ```bash
-python -m floorplan projects/three-l-multi-room/config.yaml -o projects/three-l-multi-room/output
+python -m floorplan projects/home-wood-l-triple/config.yaml -o projects/home-wood-l-triple/output
 ```
 
 运行后会生成：
 
 ```text
-projects/three-l-multi-room/output/floor_plan.svg
-projects/three-l-multi-room/output/cutting_plan.txt
+projects/home-wood-l-triple/output/floor_plan.svg
+projects/home-wood-l-triple/output/cutting_plan.txt
 ```
 
 其中：
@@ -55,7 +55,7 @@ python -m floorplan --help
 
 ```bash
 pip install -e .
-floorplan projects/three-l-multi-room/config.yaml -o projects/three-l-multi-room/output
+floorplan projects/home-wood-l-triple/config.yaml -o projects/home-wood-l-triple/output
 ```
 
 ## 运行测试

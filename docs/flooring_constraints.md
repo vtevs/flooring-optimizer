@@ -287,7 +287,7 @@ installation:
 新版房间和柜子方案的审计输出位于：
 
 ```text
-projects/three-l-multi-room/output/loss_audit.txt
+projects/home-wood-l-triple/output/loss_audit.txt
 ```
 
 审计报告应包含：

@@ -49,8 +49,8 @@
 
 **Files:**
 - Modify: `projects/balcony/config.yaml`
-- Generated: `projects/balcony/output/floor_plan.svg`
-- Generated: `projects/balcony/output/cutting_plan.txt`
+- Local generated output: `projects/balcony/output/floor_plan.svg`
+- Local generated output: `projects/balcony/output/cutting_plan.txt`
 
 - [ ] Add `material.type: tile` to balcony config.
 - [ ] Generate balcony output.

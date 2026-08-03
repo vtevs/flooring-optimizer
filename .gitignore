@@ -17,7 +17,7 @@ dist/
 *.egg-info/
 
 # Local/generated outputs
-output/
+output*/
 
 # Codex/brainstorm temporary previews
 .superpowers/
