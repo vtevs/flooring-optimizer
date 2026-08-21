@@ -215,6 +215,50 @@ class TestLTripleEngine:
         assert expected.issubset(rects)
         assert (30, 0, 35, 35) not in rects
 
+    def test_three_l_preserves_corner_notch_cut_even_when_bounds_are_full(self):
+        from floorplan.layout.board_pool import BoardPool
+        from floorplan.layout.l_triple import _try_place_rect
+
+        board = BoardConfig(length=60, width=20)
+        room = box(0, 0, 100, 100).difference(box(0, 60, 40, 100))
+        pool = BoardPool(60, kerf=1, board_width=20)
+        placed = []
+
+        _try_place_rect(
+            pool, placed, room, 60, 20,
+            bx=20, by=50, bw=60, bh=20,
+            label="1", next_label=1, board=board,
+        )
+
+        assert len(placed) == 1
+        assert placed[0].is_cut is True
+        assert Polygon(placed[0].cut_polygon).area == 1000
+        assert len(placed[0].cut_polygon) == 7
+        assert pool.total_new_boards == 1
+
+    def test_three_l_rejects_cut_shapes_that_polygon_list_cannot_preserve(self):
+        from floorplan.layout.board_pool import BoardPool
+        from floorplan.layout.l_triple import _try_place_rect
+
+        board = BoardConfig(length=60, width=20)
+        rooms = [
+            box(0, 0, 100, 100).difference(box(40, 55, 50, 65)),
+            box(0, 0, 100, 100).difference(box(45, 0, 55, 100)),
+        ]
+
+        for room in rooms:
+            pool = BoardPool(60, kerf=1, board_width=20)
+            placed = []
+            next_label = _try_place_rect(
+                pool, placed, room, 60, 20,
+                bx=20, by=50, bw=60, bh=20,
+                label="1", next_label=1, board=board,
+            )
+
+            assert placed == []
+            assert next_label == 1
+            assert pool.total_new_boards == 0
+
 
     def test_three_l_coordinate_lattice_honors_board_gap(self):
         """现实铺装中三 L 拼按板间缝扩展坐标间距。"""
@@ -255,6 +299,80 @@ class TestLTripleEngine:
 
         assert result.statistics.total_boards < len(result.boards)
         assert any(cg.parent_source_id for cg in result.statistics.cutting_groups)
+
+    def test_three_l_supplier_ab_policy_tags_cutting_groups_by_direction(self):
+        """供应商 A/B 策略下，每块板必须得到严格物理分配。"""
+        from floorplan.layout.l_triple import LTripleEngine
+
+        board = BoardConfig(length=35, width=5, stock_class_policy="supplier-ab-vertical")
+        room = box(0, 0, 70, 70)
+        result = LTripleEngine().layout(room, board, start_offset=(0, 0))
+
+        classes = {getattr(cg, "stock_class", "") for cg in result.statistics.cutting_groups}
+
+        assert "A" in classes
+        assert "B" in classes
+        assert result.stock_assignment_errors == []
+        assert all(b.stock_class in {"A", "B"} for b in result.boards)
+        assert all(b.source_rotation in {0, 90, 180, 270} for b in result.boards)
+        assert all(b.display_edges is not None for b in result.boards)
+        assert sum(result.statistics.stock_counts.values()) == result.statistics.total_boards
+        assert result.statistics.purchase_boards >= result.statistics.total_boards
+
+    def test_three_l_cutting_pieces_keep_root_source_coordinates(self):
+        """严格校验和 HTML 必须读取真实源板坐标，而不是重新猜切法。"""
+        from floorplan.layout.l_triple import LTripleEngine
+
+        board = BoardConfig(length=35, width=5)
+        room = box(0, 0, 70, 24)
+        result = LTripleEngine().layout(room, board, start_offset=(0, 0))
+        reused = next(
+            cg for cg in result.statistics.cutting_groups
+            if cg.parent_source_id
+        )
+        piece = reused.pieces[0]
+
+        assert reused.root_source_id
+        assert piece.source_x >= 0
+        assert piece.source_y >= 0
+        assert piece.source_width > 0
+        assert piece.source_length > 0
+
+    def test_three_l_multi_room_supplier_assignment_is_global(self):
+        from floorplan.models import EdgeConfig, InstallationConfig, RoomSpec
+        from floorplan.multi_optimize import optimize_multi
+
+        rooms = [
+            RoomSpec(name="A", type="rectangle", width=70, length=70,
+                     full_board_start_corner="bottom-left"),
+            RoomSpec(name="B", type="rectangle", width=75, length=70,
+                     full_board_start_corner="bottom-left"),
+        ]
+        board = BoardConfig(length=35, width=5,
+                            stock_class_policy="supplier-ab-vertical")
+        result = optimize_multi(
+            rooms,
+            board,
+            EdgeConfig(expansion_gap=0, board_gap=0),
+            kerf=1,
+            installation=InstallationConfig(pattern=Pattern.L_TRIPLE),
+        )
+
+        all_boards = [b for _, room_result in result.room_results
+                      for b in room_result.boards]
+        root_classes = {}
+        for _, room_result in result.room_results:
+            groups = {g.source_id: g
+                      for g in room_result.statistics.cutting_groups}
+            for placed in room_result.boards:
+                group = groups[placed.source_id]
+                root = group.root_source_id
+                root_classes.setdefault(root, placed.stock_class)
+                assert root_classes[root] == placed.stock_class
+
+        assert all(board.stock_class in {"A", "B"} for board in all_boards)
+        assert sum(result.stock_counts.values()) == result.total_boards
+        assert result.purchase_boards >= result.total_boards
 
 
 class TestEngineRegistration:

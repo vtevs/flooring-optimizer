@@ -13,11 +13,15 @@ from shapely.ops import unary_union
 
 from .models import LayoutResult, MultiRoomResult, Config, MaterialType
 from .geometry.room import build_room, compute_layout_area
+from .source_validation import validate_source_rectangles
 
 
 def verify_layout(result: LayoutResult, config: Config) -> list[str]:
     errors = []
-    errors.extend(_verify_cutting_ops(result, config))
+    if _uses_supplier_ab_stock(config):
+        errors.extend(_verify_supplier_source_results([result], config))
+    else:
+        errors.extend(_verify_cutting_ops(result, config))
     if not _is_tile_config(config):
         errors.extend(_verify_edges(result, config))
     errors.extend(_verify_coverage(result, config))
@@ -27,18 +31,30 @@ def verify_layout(result: LayoutResult, config: Config) -> list[str]:
 def _verify_edges(result: LayoutResult, config: Config,
                   room_label: str = "") -> list[str]:
     """逐边证明内部邻边可以完成公母榫对接。"""
-    errors, _ = verify_edge_details(result, config, room_label=room_label)
+    errors, _, _ = verify_edge_details(result, config, room_label=room_label)
     return errors
 
 
 def verify_edge_details(result: LayoutResult, config: Config,
-                        room_label: str = "") -> tuple[list[str], dict]:
-    """返回公母榫逐边校验错误和摘要。
+                        room_label: str = "") -> tuple[list[str], dict, dict]:
+    """返回公母榫逐边校验错误、摘要和每块板满足约束的朝向 assignment。
 
     校验模型：先从几何识别内部邻边；切割边若落在内部邻边则失败；
     其余原始边按实物基准左=G、右=T、下=G、上=T，
     每块板允许俯视图 0/90/180/270 四种旋转，证明所有内部邻边都存在 T/G 配对。
+
+    返回 (errors, summary, assignment)，其中 assignment: {label: 0..3 朝向状态}。
     """
+    if getattr(config.board, 'stock_class_policy', '') == 'supplier-ab-vertical':
+        from .stock_assignment import verify_recorded_supplier_stock
+        errors, summary, assignment = verify_recorded_supplier_stock(
+            result, config.board,
+            board_gap=getattr(config.edges, 'board_gap', 0.0),
+        )
+        if room_label:
+            errors = [f"[{room_label}] {error}" for error in errors]
+        return errors, summary, assignment
+
     errors = []
     prefix = f"[{room_label}] " if room_label else ""
     gap = getattr(config.edges, 'board_gap', 0.0)
@@ -103,17 +119,137 @@ def verify_edge_details(result: LayoutResult, config: Config,
         assigned_boards=len(assignment),
         errors=len(errors),
     )
-    return errors, summary
+    return errors, summary, assignment
+
+
+def board_display_edges(result: LayoutResult, config: Config,
+                        room_label: str = "") -> dict:
+    """为每块板计算符合宪法的四边显示属性。
+
+    宪法：伸缩缝/墙边/柜子边可为切割面；其余内部拼接边必须公榫/母榫对接。
+
+    方法：
+    - 几何判定每块板哪些边被裁切（靠伸缩缝/墙边）→ 标为 CUT；
+    - 内部拼接边用公母榫约束求解的朝向 assignment 标为 T/G，保证相邻 T/G 配对。
+
+    返回 {label: BoardEdges}。
+    """
+    if getattr(config.board, 'stock_class_policy', '') == 'supplier-ab-vertical':
+        return {
+            str(board.label): board.display_edges
+            for board in result.boards
+            if board.display_edges is not None
+        }
+
+    from .models import BoardEdges, EdgeType
+    coord_tol = 0.5
+
+    errors, _, assignment = verify_edge_details(result, config,
+                                                room_label=room_label)
+    _ = errors  # 校验错误在这里不需要
+
+    display = {}
+    for b in result.boards:
+        key = str(b.label)
+        full = _board_full_polygon(b)
+        used = _board_used_polygon(b)
+        cut_sides = _cut_sides(full, used, coord_tol)
+
+        # 朝向状态：优先用约束求解的 assignment，否则按实物朝向取默认
+        if key in assignment:
+            state = assignment[key]
+        else:
+            state = 1 if _board_orientation_kind(b) == 'vertical' else 0
+
+        def _side_type(side):
+            if cut_sides.get(side, False):
+                return EdgeType.CUT
+            return _edge_type_for_side(None, state, side)
+
+        display[key] = BoardEdges(
+            top=_side_type('top'),
+            right=_side_type('right'),
+            bottom=_side_type('bottom'),
+            left=_side_type('left'),
+        )
+    return display
 
 
 def verify_multi(multi_result: MultiRoomResult, config: Config) -> list[str]:
     errors = []
+    if _uses_supplier_ab_stock(config):
+        errors.extend(_verify_supplier_sources(multi_result, config))
     for rs, room_result in multi_result.room_results:
-        errors.extend(_verify_cutting_ops(room_result, config, room_label=rs.name))
+        if not _uses_supplier_ab_stock(config):
+            errors.extend(_verify_cutting_ops(room_result, config, room_label=rs.name))
         if not _is_tile_config(config):
             errors.extend(_verify_edges(room_result, config, room_label=rs.name))
         errors.extend(_verify_coverage(room_result, config, room_label=rs.name,
                                        room_width=rs.width, room_length=rs.length))
+    return errors
+
+
+def _uses_supplier_ab_stock(config: Config) -> bool:
+    return getattr(config.board, 'stock_class_policy', '') == 'supplier-ab-vertical'
+
+
+def _verify_supplier_sources(multi_result: MultiRoomResult,
+                             config: Config) -> list[str]:
+    """逐张校验跨房间共享 A/B 源板的切割坐标。"""
+    return _verify_supplier_source_results(
+        [room_result for _, room_result in multi_result.room_results],
+        config,
+    )
+
+
+def _verify_supplier_source_results(results: list[LayoutResult],
+                                    config: Config) -> list[str]:
+    by_root = defaultdict(list)
+    placed_classes = defaultdict(set)
+    for result in results:
+        roots_by_label = {}
+        for group in result.statistics.cutting_groups:
+            root = group.root_source_id or group.source_id
+            by_root[root].append(group)
+            for piece in group.pieces:
+                roots_by_label[str(piece.label)] = root
+        for board in result.boards:
+            root = roots_by_label.get(str(board.label))
+            if root and board.stock_class:
+                placed_classes[root].add(board.stock_class)
+
+    errors = []
+    tolerance = 1e-6
+    source_length = config.board.length
+    source_width = config.board.width
+    kerf = config.kerf
+    for root, groups in by_root.items():
+        stock_classes = (
+            {group.stock_class for group in groups if group.stock_class}
+            | placed_classes[root]
+        )
+        if len(stock_classes) != 1:
+            errors.append(f"源板{root}: 同源板 A/B 类型不一致")
+
+        pieces = []
+        for group in groups:
+            for piece in group.pieces:
+                width = piece.source_width or piece.width or source_width
+                length = piece.source_length or piece.length
+                pieces.append({
+                    'label': piece.label,
+                    'x': piece.source_x,
+                    'y': piece.source_y,
+                    'wid': width,
+                    'len': length,
+                    'polygon': list(piece.source_polygon or []),
+                })
+        errors.extend(
+            f"源板{root}: {error}"
+            for error in validate_source_rectangles(
+                pieces, source_length, source_width, kerf, tolerance,
+            )
+        )
     return errors
 
 
@@ -400,6 +536,13 @@ def _verify_coverage(result: LayoutResult, config: Config,
         return [f"{prefix}无铺装板"]
 
     covered = unary_union(boards_polys)
+
+    outside_layout = covered.difference(layout_area.buffer(0.1, join_style=2))
+    if outside_layout.area > 1e-6:
+        errors.append(
+            f"{prefix}铺装进入伸缩缝或不可铺区域 "
+            f"{outside_layout.area/1e6:.4f} m²"
+        )
 
     outside = covered.difference(room.buffer(1.0))
     if outside.area > room.area * 0.005:

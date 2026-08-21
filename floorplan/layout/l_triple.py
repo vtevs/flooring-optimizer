@@ -32,7 +32,11 @@ class LTripleEngine(LayoutEngine):
         gap = kwargs.get('board_gap', 0.0)
         pitch = W + gap
         kf = kwargs.get('kerf', 1.0)
-        pool = kwargs.get('pool') or BoardPool(L, kerf=kf, board_width=W, material_type=kwargs.get('material_type', 'wood'))
+        shared_pool = kwargs.get('pool')
+        pool = shared_pool or BoardPool(
+            L, kerf=kf, board_width=W,
+            material_type=kwargs.get('material_type', 'wood'),
+        )
         label_offset = kwargs.get('label_start', 0)
 
         placed = []
@@ -61,14 +65,14 @@ class LTripleEngine(LayoutEngine):
                     next_label = _try_place_rect(
                         pool, placed, room, L, W,
                         px + i * pitch, py, W, L,
-                        str(next_label), next_label)
+                        str(next_label), next_label, board)
 
                 # B: three horizontal boards, each L × W, starting at x=3W.
                 for i in range(3):
                     next_label = _try_place_rect(
                         pool, placed, room, L, W,
                         px + 3 * pitch, py + i * pitch, L, W,
-                        str(next_label), next_label)
+                        str(next_label), next_label, board)
 
         full_count = sum(1 for b in placed if not b.is_cut)
         used = pool.total_new_boards + full_count
@@ -78,7 +82,7 @@ class LTripleEngine(LayoutEngine):
 
         cgs = [_make_cg(g) for g in pool.cutting_groups]
 
-        return LayoutResult(boards=placed, statistics=LayoutStatistics(
+        result = LayoutResult(boards=placed, statistics=LayoutStatistics(
             total_boards=used, full_boards=full_count,
             cut_boards=used - full_count,
             total_area=total_area,
@@ -87,6 +91,13 @@ class LTripleEngine(LayoutEngine):
             utilization=room_area / total_area if total_area > 0 else 0,
             cutting_groups=cgs,
         ), pattern=Pattern.L_TRIPLE, start_offset=start_offset)
+        if (getattr(board, "stock_class_policy", "") == "supplier-ab-vertical"
+                and shared_pool is None):
+            from ..stock_assignment import assign_supplier_stock
+            result.stock_assignment_errors = assign_supplier_stock(
+                result, board, board_gap=gap, kerf=kf,
+            )
+        return result
 
 
 def _lattice_ranges(bounds, origin, u, d):
@@ -115,13 +126,17 @@ def _lattice_ranges(bounds, origin, u, d):
 
 
 def _try_place_rect(pool, placed, room, L, W,
-                    bx, by, bw, bh, label, next_label) -> int:
+                    bx, by, bw, bh, label, next_label, board) -> int:
     """Place one physical board rectangle and return the next label number."""
     from shapely.geometry import box
 
     bp = box(bx, by, bx + bw, by + bh)
     clipped = room.intersection(bp)
     if clipped.is_empty or clipped.area <= 0.01 * bw * bh:
+        return next_label
+    # cut_polygon stores one exterior ring. Reject holes or disconnected pieces
+    # so an obstacle can never disappear during serialization or rendering.
+    if clipped.geom_type != "Polygon" or len(clipped.interiors) > 0:
         return next_label
 
     cx0, cy0, cx1, cy1 = clipped.bounds
@@ -134,13 +149,16 @@ def _try_place_rect(pool, placed, room, L, W,
 
     length_cut = used_len < L - 0.5
     width_cut = actual_w < W - 0.5
-    is_cut = length_cut or width_cut
+    shape_cut = clipped.symmetric_difference(bp).area > 1e-6
+    is_cut = length_cut or width_cut or shape_cut
     if length_cut and width_cut:
         src = pool.cut_new_combined(used_len, actual_w, label)
     elif length_cut:
         src = pool.take_or_cut(used_len, label)
     elif width_cut:
         src = pool.cut_new_width(actual_w, label)
+    elif shape_cut:
+        src = pool.register_shape_cut(label)
     else:
         src = pool.register_full(label)
 
@@ -154,16 +172,23 @@ def _try_place_rect(pool, placed, room, L, W,
     ))
     return next_label + 1
 
-
 def _make_cg(g: dict) -> CuttingGroup:
     return CuttingGroup(
         source_id=g['source_id'],
         pieces=[CuttingPiece(label=p['label'], length=p['length'],
-                             width=p.get('width', 0.0)) for p in g['pieces']],
+                             width=p.get('width', 0.0),
+                             source_x=p.get('source_x', 0.0),
+                             source_y=p.get('source_y', 0.0),
+                             source_width=p.get('source_width', 0.0),
+                             source_length=p.get('source_length', 0.0),
+                             source_polygon=p.get('source_polygon', []))
+                 for p in g['pieces']],
         total_length=g['total_length'], used_length=g['used_length'],
         waste_length=g['waste_length'],
         width_waste=g.get('width_waste', 0.0),
         parent_source_id=g.get('parent_source_id', ''),
         total_width=g.get('total_width', 0.0),
         edges=g.get('edges'),
+        stock_class=g.get('stock_class', ''),
+        root_source_id=g.get('root_source_id', ''),
     )

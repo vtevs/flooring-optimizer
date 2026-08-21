@@ -35,15 +35,19 @@ python -m floorplan projects/home-wood-l-triple/config.yaml -o projects/home-woo
 运行后会生成：
 
 ```text
-projects/home-wood-l-triple/output/floor_plan.svg
+projects/home-wood-l-triple/output/floor_plan.html
 projects/home-wood-l-triple/output/cutting_plan.txt
 ```
 
 其中：
 
-- `floor_plan.svg` 是铺装示意图。
+- `floor_plan.html` 是交互式铺装示意图（多房间模式）。铺装片直接标识 A/B 类型；点击任意切割板可高亮同源板片，并查看源板切割坐标、铺装旋转、四边榫槽属性及严格切割校验结论。
 - `cutting_plan.txt` 是切割清单。
-- `loss_audit.txt` 是当前方案的损耗与公母榫审计记录。
+- `loss_audit.txt` 是当前方案的损耗与公母榫审计记录（单房间模式）。
+
+> 每个房间可通过 `full_board_start_corner` 配置整板起始角
+> （`bottom-left` / `top-left` / `top-right` / `bottom-right`），
+> 示例见 `projects/home-wood-l-triple/config-full-board-corner.yaml`。
 
 ## 查看命令帮助
 

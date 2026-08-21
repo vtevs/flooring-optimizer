@@ -24,24 +24,21 @@ rooms:
       - [1063, 3460]
       - [1063, 5447]
       - [0, 5447]
-    obstacles:
-      - name: wardrobe
-        type: rectangle
-        x: 1063
-        y: 2860
-        width: 2191   # X 方向长度
-        length: 600   # Y 方向宽度
+    obstacles: []
+    full_board_start_corner: top-left
 
   - name: B-儿童房
     type: rectangle
     width: 2562      # X 方向长度
     length: 3264     # Y 方向宽度
     obstacles: []
+    full_board_start_corner: top-left
 
   - name: C-次卧
     type: rectangle
     width: 2856      # X 方向长度
     length: 3462     # Y 方向宽度
+    full_board_start_corner: top-right
     obstacles:
       - name: wardrobe
         type: rectangle
@@ -53,27 +50,28 @@ rooms:
         length: 600   # Y 方向宽度
 
 board:
-  length: 600
-  width: 88
+  length: 610
+  width: 92
   thickness: 18
+  stock_class_policy: supplier-ab-vertical
 
 installation:
   pattern: l-triple
   direction: 0
   stagger_ratio: 0.5
-  require_full_board_at_room_bottom_left: true
+  require_full_board_at_room_corner: false
 
 edges:
-  baseboard_width: 15
-  expansion_gap: 10
-  board_gap: 0.5
+  baseboard_width: 28
+  expansion_gap: 18
+  board_gap: 0
 
-kerf: 1.0
+kerf: 1.5
 
 output:
-  file: floor_plan.svg
+  file: floor_plan.html
   scale: auto
   show_dimensions: true
-  show_labels: true
+  show_labels: false
   show_grid: false
   color_scheme: wood

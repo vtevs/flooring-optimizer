@@ -80,6 +80,8 @@ def _parse_and_validate(raw: dict) -> Config:
                 name=name, type=room_type, width=w, length=h,
                 notch=notch, points=points,
                 obstacles=_parse_obstacles(r.get("obstacles", []), f"rooms[{i}].obstacles"),
+                full_board_start_corner=_parse_corner(r.get("full_board_start_corner"),
+                                                      f"rooms[{i}].full_board_start_corner"),
             ))
     else:
         # 单房间模式
@@ -98,6 +100,8 @@ def _parse_and_validate(raw: dict) -> Config:
         room = RoomConfig(
             type=room_type, width=w, length=h, notch=notch, points=points,
             obstacles=_parse_obstacles(room_raw.get("obstacles", []), "room.obstacles"),
+            full_board_start_corner=_parse_corner(room_raw.get("full_board_start_corner"),
+                                                  "room.full_board_start_corner"),
         )
         if room.notch and (room.notch.width > room.width or room.notch.depth > room.length):
             raise ValueError("缺口尺寸不能超过房间总尺寸")
@@ -110,6 +114,7 @@ def _parse_and_validate(raw: dict) -> Config:
         length=_require_positive(board_raw, "length", "board"),
         width=_require_positive(board_raw, "width", "board"),
         thickness=board_raw.get("thickness", 12.0),
+        stock_class_policy=str(board_raw.get("stock_class_policy", "") or ""),
     )
     if board.width > board.length:
         raise ValueError("板宽不能大于板长")
@@ -197,6 +202,23 @@ def _parse_and_validate(raw: dict) -> Config:
 def _validate_room_type(room_type: str):
     if room_type not in ("rectangle", "l-shaped", "polygon"):
         raise ValueError(f"无效的房间类型: {room_type}")
+
+
+VALID_CORNERS = {"bottom-left", "top-left", "top-right", "bottom-right"}
+
+
+def _parse_corner(value, section: str) -> str:
+    """解析整板起始角属性，返回规范化字符串或空串。"""
+    if value is None:
+        return ""
+    if isinstance(value, bool):
+        raise ValueError(f"[{section}] 必须是字符串角名")
+    val = str(value).strip().lower().replace("_", "-")
+    if val not in VALID_CORNERS:
+        raise ValueError(
+            f"[{section}] 无效的整板起始角: {value}，可选: {sorted(VALID_CORNERS)}"
+        )
+    return val
 
 
 def _parse_notch(raw: dict, section: str, required: bool = False):

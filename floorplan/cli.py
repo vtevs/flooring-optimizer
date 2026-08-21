@@ -337,7 +337,10 @@ def _run_multi_room(config, output):
 
     click.echo(f"铺装方式: {config.installation.pattern.value}  "
                f"方向: {config.installation.direction}°")
-    click.echo("正在计算最优综合方案（枚举房间顺序）...")
+    if getattr(config.board, 'stock_class_policy', '') == 'supplier-ab-vertical':
+        click.echo("正在计算 A/B 源板、旋转、邻边与切割复用的联合优化方案...")
+    else:
+        click.echo("正在计算最优综合方案（枚举房间顺序）...")
     result = optimize_multi(config.rooms, config.board, config.edges, config.kerf,
                             installation=config.installation,
                             material_type=config.material.type)
@@ -352,10 +355,22 @@ def _run_multi_room(config, output):
     click.echo(f"\n综合结果:")
     click.echo(f"  总用板: {s.total_boards}  综合利用率: {util*100:.1f}%  损耗率: {(1-util)*100:.1f}%")
     click.echo(f"  综合可铺面积: {combined_area/1e6:.2f} m²")
+    for line in _supplier_stock_summary(result):
+        click.echo(f"  {line}")
+    if getattr(result, 'purchase_boards', 0):
+        purchase_area = result.purchase_boards * board_area
+        purchase_util = combined_area / purchase_area if purchase_area else 0
+        click.echo(
+            f"  采购口径利用率: {purchase_util*100:.1f}%  "
+            f"损耗率: {(1-purchase_util)*100:.1f}%"
+        )
 
     for rs, room_result in result.room_results:
         rs_obj = room_result.statistics
-        click.echo(f"  {rs.name}: {rs_obj.total_boards}板")
+        if getattr(config.board, 'stock_class_policy', '') == 'supplier-ab-vertical':
+            click.echo(f"  {rs.name}: {_supplier_room_summary(room_result)}")
+        else:
+            click.echo(f"  {rs.name}: {rs_obj.total_boards}板")
 
     # 输出切割方案
     out_dir = Path(output) if output else Path.cwd()
@@ -369,26 +384,45 @@ def _run_multi_room(config, output):
     if config.installation.pattern.value == 'staggered':
         lines.append(f"错缝比例: {config.installation.stagger_ratio}")
     lines.append(f"综合总用板: {result.total_boards}  利用率: {util*100:.1f}%  损耗率: {(1-util)*100:.1f}%")
+    lines.extend(_supplier_stock_summary(result))
+    if getattr(result, 'purchase_boards', 0):
+        purchase_area = result.purchase_boards * board_area
+        purchase_util = combined_area / purchase_area if purchase_area else 0
+        lines.append(
+            f"采购口径利用率: {purchase_util*100:.1f}%  "
+            f"损耗率: {(1-purchase_util)*100:.1f}%"
+        )
     lines.append("")
 
-    for rs, room_result in result.room_results:
-        reuse = getattr(room_result, 'reuse_info', None)
-        room_lines = _format_cutting_groups(room_result.statistics, config,
-                                            room_label=rs.name, reuse_info=reuse)
-        lines.extend(room_lines)
+    if getattr(config.board, 'stock_class_policy', '') == 'supplier-ab-vertical':
+        for rs, room_result in result.room_results:
+            lines.extend([
+                f"--- {rs.name} ---",
+                _supplier_room_summary(room_result),
+                "",
+            ])
+        lines.extend(_format_supplier_source_plan(result, config))
+    else:
+        for rs, room_result in result.room_results:
+            reuse = getattr(room_result, 'reuse_info', None)
+            room_lines = _format_cutting_groups(
+                room_result.statistics, config,
+                room_label=rs.name, reuse_info=reuse,
+            )
+            lines.extend(room_lines)
 
-    # 综合废料汇总
-    lines.extend(_format_total_waste(result, config))
+        # 综合废料汇总
+        lines.extend(_format_total_waste(result, config))
 
     lines.append("=" * 60)
     txt_path.write_text('\n'.join(lines), encoding='utf-8')
     click.echo(f"切割方案: {txt_path}")
 
-    # 渲染所有房间到一个 SVG
-    from .svg.renderer import render_multi
-    svg_path = out_dir / config.output.file
-    render_multi(result, config, svg_path)
-    click.echo(f"铺装图: {svg_path}")
+    # 渲染所有房间到一个交互式 HTML
+    from .svg.html_renderer import render_multi_html
+    out_path = _multi_room_plan_path(out_dir, config.output)
+    render_multi_html(result, config, out_path)
+    click.echo(f"铺装图(HTML): {out_path}")
 
     # 校验
     from .verify import verify_multi
@@ -399,6 +433,153 @@ def _run_multi_room(config, output):
             click.echo(f"  {e}")
     else:
         click.secho("✓ 校验通过", fg="green")
+
+
+def _multi_room_plan_path(out_dir: Path, output_config) -> Path:
+    """Return the multi-room HTML plan path regardless of legacy SVG config."""
+    path = out_dir / output_config.file
+    if path.suffix.lower() != ".html":
+        path = path.with_suffix(".html")
+    return path
+
+
+def _supplier_stock_summary(result) -> list[str]:
+    counts = getattr(result, 'stock_counts', None) or {}
+    if not counts:
+        return []
+    return [
+        f"A 型源板: {counts.get('A', 0)}  B 型源板: {counts.get('B', 0)}  "
+        f"实际消耗: {result.total_boards}",
+        f"按 1:1 配板采购: {getattr(result, 'purchase_boards', 0)}",
+    ]
+
+
+def _supplier_room_summary(room_result) -> str:
+    full_pieces = sum(not board.is_cut for board in room_result.boards)
+    cut_pieces = len(room_result.boards) - full_pieces
+    return (
+        f"铺装片: {len(room_result.boards)}（完整{full_pieces} / 切割{cut_pieces}）  "
+        f"本房间计入源板: {room_result.statistics.total_boards}"
+    )
+
+
+def _format_supplier_source_plan(result, config) -> list[str]:
+    """按联合求解后的绝对坐标输出 A/B 源板切割方案。"""
+    from collections import defaultdict
+    from shapely.geometry import Polygon, box as sbox
+    from .source_validation import validate_source_rectangles
+
+    by_root = defaultdict(list)
+    for room, room_result in result.room_results:
+        boards = {str(board.label): board for board in room_result.boards}
+        for group in room_result.statistics.cutting_groups:
+            root = group.root_source_id or group.source_id
+            for piece in group.pieces:
+                by_root[root].append((room.name, group, piece,
+                                      boards.get(str(piece.label))))
+
+    source_length = config.board.length
+    source_width = config.board.width
+    source_area = source_length * source_width
+    cut_sources = []
+    for root, entries in by_root.items():
+        if len(entries) > 1:
+            cut_sources.append((root, entries))
+            continue
+        _, _, piece, _ = entries[0]
+        piece_width = piece.source_width or piece.width or source_width
+        piece_length = piece.source_length or piece.length
+        source_polygon = list(piece.source_polygon or [])
+        shape_cut = bool(
+            source_polygon and
+            Polygon(source_polygon).symmetric_difference(sbox(
+                piece.source_x, piece.source_y,
+                piece.source_x + piece_width,
+                piece.source_y + piece_length,
+            )).area > 1e-6
+        )
+        if (abs(piece.source_x) > 1e-6 or abs(piece.source_y) > 1e-6 or
+                abs(piece_width - source_width) > 1e-6 or
+                abs(piece_length - source_length) > 1e-6 or shape_cut):
+            cut_sources.append((root, entries))
+
+    lines = [
+        "=== A/B 源板严格切割坐标 ===",
+        "坐标基准: 源板竖放，左下角=(0,0)，x 沿板宽，y 沿板长",
+        f"源板尺寸: width={source_width:g}mm, length={source_length:g}mm, "
+        f"kerf={config.kerf:g}mm",
+        f"发生切割或复用的源板: {len(cut_sources)} 张",
+        "-" * 60,
+    ]
+    total_unused_area = 0.0
+    for root, entries in sorted(cut_sources, key=lambda item: item[0]):
+        stock_classes = {group.stock_class for _, group, _, _ in entries
+                         if group.stock_class}
+        stock_class = next(iter(stock_classes), "?")
+        rectangles = []
+        used_area = 0.0
+        for _, _, piece, _ in entries:
+            width = piece.source_width or piece.width or source_width
+            length = piece.source_length or piece.length
+            rectangles.append({
+                'label': piece.label,
+                'x': piece.source_x,
+                'y': piece.source_y,
+                'wid': width,
+                'len': length,
+                'polygon': list(piece.source_polygon or []),
+            })
+            used_area += (
+                Polygon(piece.source_polygon).area
+                if piece.source_polygon else width * length
+            )
+        validation_errors = validate_source_rectangles(
+            rectangles, source_length, source_width, config.kerf,
+        )
+        if len(stock_classes) != 1:
+            validation_errors.append("同源板 A/B 类型不一致")
+        validation = "通过" if not validation_errors else "失败: " + "; ".join(validation_errors)
+        lines.append(f"[{root}] {stock_class} 型  源板切割坐标校验: {validation}")
+        for room_name, _, piece, board in sorted(
+                entries, key=lambda item: (item[2].source_y, item[2].source_x)):
+            width = piece.source_width or piece.width or source_width
+            length = piece.source_length or piece.length
+            rotation = getattr(board, 'source_rotation', None)
+            rotation_text = "?" if rotation is None else f"{rotation:g}°"
+            edges = getattr(board, 'display_edges', None)
+            if edges is None:
+                edge_text = "顶=? 右=? 底=? 左=?"
+            else:
+                edge_text = (
+                    f"顶={_edge_char(edges.top)} 右={_edge_char(edges.right)} "
+                    f"底={_edge_char(edges.bottom)} 左={_edge_char(edges.left)}"
+                )
+            lines.append(
+                f"  位{piece.label} [{room_name}] "
+                f"x={piece.source_x:g}, y={piece.source_y:g}, "
+                f"width={width:g}, length={length:g}mm  "
+                f"铺装旋转={rotation_text}  {edge_text}"
+            )
+            if piece.source_polygon:
+                source_rect = sbox(
+                    piece.source_x, piece.source_y,
+                    piece.source_x + width, piece.source_y + length,
+                )
+                polygon = Polygon(piece.source_polygon)
+                if polygon.symmetric_difference(source_rect).area > 1e-6:
+                    points = " ".join(
+                        f"({x:g},{y:g})" for x, y in piece.source_polygon
+                    )
+                    lines.append(f"    异形切割轮廓: {points}")
+        unused_area = max(0.0, source_area - used_area)
+        total_unused_area += unused_area
+        lines.append(f"  未铺入面积(含锯缝): {unused_area/1e6:.4f} m²")
+    lines.extend([
+        "-" * 60,
+        f"上述源板未铺入总面积(含锯缝): {total_unused_area/1e6:.4f} m²",
+        "",
+    ])
+    return lines
 
 
 def _derive_waste_edges(cg, is_width_waste: bool):

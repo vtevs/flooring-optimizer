@@ -67,6 +67,7 @@ class RoomConfig:
     notch: Optional[NotchConfig] = None
     points: list = field(default_factory=list)
     obstacles: list = field(default_factory=list)
+    full_board_start_corner: str = ""  # 整板起始角: "bottom-left" | "top-left" | "top-right" | "bottom-right"
 
 
 @dataclass
@@ -75,6 +76,7 @@ class BoardConfig:
     length: float
     width: float
     thickness: float = 12.0
+    stock_class_policy: str = ""
 
 
 @dataclass
@@ -122,6 +124,7 @@ class RoomSpec:
     notch: Optional[NotchConfig] = None
     points: list = field(default_factory=list)
     obstacles: list = field(default_factory=list)
+    full_board_start_corner: str = ""  # 整板起始角: "bottom-left" | "top-left" | "top-right" | "bottom-right"
 
 
 @dataclass
@@ -133,6 +136,8 @@ class MultiRoomResult:
     total_area: float = 0.0
     combined_room_area: float = 0.0
     utilization: float = 0.0
+    stock_counts: dict = field(default_factory=dict)
+    purchase_boards: int = 0
 
 
 @dataclass
@@ -302,6 +307,9 @@ class PlacedBoard:
     label: str = ""             # 编号标签（铺装位编号）
     source_id: str = ""         # 来源板编号（同一块板切出的多块共享）
     width_waste: float = 0.0    # 宽度裁剪废弃面积 mm²
+    stock_class: str = ""       # 供应商 A/B 板型
+    source_rotation: int = 0    # 源板片在俯视平面内的实际旋转角
+    display_edges: Optional[BoardEdges] = None  # 实际铺装四边
 
 
 @dataclass
@@ -310,6 +318,11 @@ class CuttingPiece:
     label: str                  # 放置标签
     length: float               # 使用长度 mm
     width: float = 0.0          # 使用宽度 mm (0 = 使用板宽)
+    source_x: float = 0.0       # 在根源板中的左下角 x（板宽方向）
+    source_y: float = 0.0       # 在根源板中的左下角 y（板长方向）
+    source_width: float = 0.0   # 在根源板中的实际宽度
+    source_length: float = 0.0  # 在根源板中的实际长度
+    source_polygon: list = field(default_factory=list)  # 最终切割轮廓（根源板坐标）
 
 
 @dataclass
@@ -329,6 +342,8 @@ class CuttingGroup:
     parent_source_id: str = ""  # 追溯：原始源板 ID（复用操作时有值）
     total_width: float = 0.0    # 本次操作的原料宽度（0=全宽）
     edges: any = None           # BoardEdges | None 四边属性
+    stock_class: str = ""       # 供应商库存类型，如 A/B
+    root_source_id: str = ""    # 物理整板 ID，复用操作仍指向最初源板
 
 
 @dataclass
@@ -342,6 +357,8 @@ class LayoutStatistics:
     room_area: float = 0.0      # 房间可铺面积 mm²
     utilization: float = 0.0    # 利用率 = room_area / total_area
     cutting_groups: list = None  # list[CuttingGroup] 切割方案
+    stock_counts: dict = field(default_factory=dict)  # A/B 实际源板数
+    purchase_boards: int = 0    # 按供应商配板比例需要采购的数量
 
 
 @dataclass
@@ -351,3 +368,4 @@ class LayoutResult:
     statistics: LayoutStatistics
     pattern: Pattern
     start_offset: tuple = (0.0, 0.0)
+    stock_assignment_errors: list = field(default_factory=list)
