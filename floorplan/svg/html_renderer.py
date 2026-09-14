@@ -4,7 +4,7 @@ HTML 铺装图渲染器 — 交互式多房间视图。
 与 SVG 渲染器不同，此渲染器输出单个自包含的 .html 文件：
 - 每个房间绘制在独立分组中（SVG 内嵌）。
 - 不显示复杂的"位号/源号"标签，保持版面整洁。
-- 点击任意一块切割板：
+- 点击任意板片：
     * 高亮同一块源板切出的所有相关切割板；
     * 弹出弹窗，列出所有相关切割板（含被点击的那块）在图中的
       顶右底左四边榫槽属性（公榫/母榫/切割面）。
@@ -111,6 +111,7 @@ def render_multi_html(multi_result, config, filepath):
         for b in d['result'].boards:
             pe = b._display_edges
             plen, pwid = label_size.get(b.label, (round(b.length), round(b.width)))
+            placement = _placement_view_geometry(b)
             all_boards.append({
                 'label': b.label,
                 'source': b.source_id,
@@ -121,6 +122,9 @@ def render_multi_html(multi_result, config, filepath):
                 'wid': pwid,
                 'stock_class': getattr(b, '_stock_class', ''),
                 'source_rotation': getattr(b, 'source_rotation', 0),
+                'placement_width': placement['width'],
+                'placement_height': placement['height'],
+                'placement_polygon': placement['polygon'],
                 'edges': {
                     'top': EDGE_CN.get(pe.top, '?'),
                     'right': EDGE_CN.get(pe.right, '?'),
@@ -254,6 +258,30 @@ def _stock_label_svg(stock, x, y, scale):
     )
 
 
+def _placement_view_geometry(board):
+    """Return the board's actual room-oriented outline in local coordinates."""
+    if board.is_cut and board.cut_polygon:
+        used = Polygon(board.cut_polygon)
+    else:
+        used = box(
+            board.x - board.length / 2,
+            board.y - board.width / 2,
+            board.x + board.length / 2,
+            board.y + board.width / 2,
+        )
+        if board.rotation and abs(board.rotation) > 0.1:
+            used = affinity.rotate(used, board.rotation, origin=(board.x, board.y))
+    minx, miny, maxx, maxy = used.bounds
+    return {
+        'width': maxx - minx,
+        'height': maxy - miny,
+        'polygon': [
+            [x - minx, y - miny]
+            for x, y in used.exterior.coords
+        ],
+    }
+
+
 def _poly_scaled(poly, cls, ox, oy, scale, room_h):
     if hasattr(poly, 'exterior'):
         coords = poly.exterior.coords
@@ -330,7 +358,7 @@ def _reconstruct_source_layouts(multi_result, config, source_parent, root_fn):
                     Polygon(source_polygon).symmetric_difference(source_rect).area
                     > 1e-6
                 )
-                pieces.append({
+                piece_data = {
                     'label': p.label,
                     'source': g.source_id,
                     'x': p.source_x,
@@ -339,9 +367,12 @@ def _reconstruct_source_layouts(multi_result, config, source_parent, root_fn):
                     'wid': pw,
                     'polygon': source_polygon,
                     'shape_cut': shape_cut,
-                })
+                    'edges': None,
+                }
+                pieces.append(piece_data)
                 if supplier_mode:
                     from ..stock_assignment import placement_states
+                    from ..stock import rotate_board_edges
                     placed = boards.get(str(p.label))
                     if placed is None:
                         inheritance_errors.append(f"位{p.label}缺少铺装记录")
@@ -362,6 +393,16 @@ def _reconstruct_source_layouts(multi_result, config, source_parent, root_fn):
                         inheritance_errors.append(
                             f"位{p.label}旋转或四边继承不一致"
                         )
+                    else:
+                        source_edges = rotate_board_edges(
+                            matching[0].edges, -placed.source_rotation,
+                        )
+                        piece_data['edges'] = {
+                            'top': EDGE_CN[source_edges.top],
+                            'right': EDGE_CN[source_edges.right],
+                            'bottom': EDGE_CN[source_edges.bottom],
+                            'left': EDGE_CN[source_edges.left],
+                        }
         errors = validate_source_rectangles(pieces, L, W, K)
         errors.extend(inheritance_errors)
         for room_id in related_room_ids:
@@ -460,7 +501,7 @@ def _build_html(cw, ch, rooms_svg, all_boards, stats, total_boards,
   .modal-mask {{ position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none;
                  align-items: flex-start; justify-content: center; z-index: 100; padding-top: 8vh; }}
   .modal-mask.show {{ display: flex; }}
-  .modal {{ background: #fff; border-radius: 10px; width: 720px; max-width: 94vw;
+  .modal {{ background: #fff; border-radius: 8px; width: 800px; max-width: 94vw;
             max-height: 78vh; overflow: auto; box-shadow: 0 8px 30px rgba(0,0,0,.25); }}
   .modal-head {{ padding: 14px 20px; border-bottom: 1px solid #eee;
                  display: flex; justify-content: space-between; align-items: center; }}
@@ -469,6 +510,11 @@ def _build_html(cw, ch, rooms_svg, all_boards, stats, total_boards,
                   width: 28px; height: 28px; font-size: 16px; }}
   .modal-body {{ padding: 16px 20px; }}
   .modal-info {{ font-size: 12px; color: #777; margin-bottom: 12px; }}
+  .view-tabs {{ display: flex; gap: 4px; margin-bottom: 14px; border-bottom: 1px solid #ddd; }}
+  .view-tab {{ border: 0; border-bottom: 3px solid transparent; background: transparent;
+               padding: 8px 14px; color: #666; cursor: pointer; font-weight: 600; }}
+  .view-tab.active {{ color: #222; border-bottom-color: #2b7f73; }}
+  .detail-view[hidden] {{ display: none; }}
   table {{ width: 100%; border-collapse: collapse; font-size: 13px; }}
   th, td {{ border: 1px solid #eee; padding: 7px 10px; text-align: center; }}
   th {{ background: #f8f8f8; font-weight: 600; }}
@@ -487,12 +533,13 @@ def _build_html(cw, ch, rooms_svg, all_boards, stats, total_boards,
   .diagram .dg-lbl {{ font-size: 9px; fill: #333; font-family: sans-serif; text-anchor: middle; }}
   .diagram .dg-dim {{ font-size: 8px; fill: #888; font-family: sans-serif; text-anchor: middle; }}
   .diagram .dg-source {{ font-size: 8px; fill: #999; font-family: sans-serif; }}
+  .diagram .dg-edge {{ font-size: 11px; font-family: sans-serif; font-weight: 700; }}
 </style>
 </head>
 <body>
 <div class="header">
   <h1>木地板铺装图</h1>
-  <span class="hint">点击任意切割板：高亮同源关联板；再次点击或点击空白关闭。弹窗列出同源板四边榫槽属性。</span>
+  <span class="hint">点击任意板片查看铺装方向和同源切割方案；再次点击或点击空白关闭。</span>
 </div>
 <div class="stats-bar">
   <table class="stats">
@@ -554,15 +601,27 @@ def _build_html(cw, ch, rooms_svg, all_boards, stats, total_boards,
     </div>
     <div class="modal-body">
       <div class="modal-info" id="modalInfo"></div>
-      <div class="diagram-title">从整板切割示意图（长×宽 mm）</div>
-      <div class="diagram" id="sourceDiagram"></div>
-      <table>
-        <thead>
-          <tr><th>#</th><th>房间</th><th>位号</th><th>尺寸(长×宽mm)</th><th>源号</th>
-              <th>板型</th><th>铺装旋转</th><th>顶</th><th>右</th><th>底</th><th>左</th><th>类型</th></tr>
-        </thead>
-        <tbody id="modalBody"></tbody>
-      </table>
+      <div class="view-tabs" role="tablist">
+        <button class="view-tab active" id="placementTab" role="tab" aria-selected="true"
+                onclick="switchDetailView('placement')">铺装视图</button>
+        <button class="view-tab" id="sourceTab" role="tab" aria-selected="false"
+                onclick="switchDetailView('source')">源板切割视图</button>
+      </div>
+      <section class="detail-view" id="placementView">
+        <div class="diagram-title">当前铺装方向（长×宽 mm）</div>
+        <div class="diagram" id="placementDiagram"></div>
+      </section>
+      <section class="detail-view" id="sourceView" hidden>
+        <div class="diagram-title">从整板切割示意图（长×宽 mm）</div>
+        <div class="diagram" id="sourceDiagram"></div>
+        <table>
+          <thead>
+            <tr><th>#</th><th>房间</th><th>位号</th><th>尺寸(长×宽mm)</th><th>源号</th>
+                <th>板型</th><th>铺装旋转</th><th>顶</th><th>右</th><th>底</th><th>左</th><th>类型</th></tr>
+          </thead>
+          <tbody id="modalBody"></tbody>
+        </table>
+      </section>
     </div>
   </div>
 </div>
@@ -635,8 +694,67 @@ function showModal(label, root) {{
       + '</tr>';
   }});
 
+  renderPlacementDiagram(clicked);
   renderSourceDiagram(root, label);
+  switchDetailView('placement');
   document.getElementById('modalMask').classList.add('show');
+}}
+
+function switchDetailView(view) {{
+  const placement = view === 'placement';
+  document.getElementById('placementView').hidden = !placement;
+  document.getElementById('sourceView').hidden = placement;
+  document.getElementById('placementTab').classList.toggle('active', placement);
+  document.getElementById('sourceTab').classList.toggle('active', !placement);
+  document.getElementById('placementTab').setAttribute('aria-selected', placement ? 'true' : 'false');
+  document.getElementById('sourceTab').setAttribute('aria-selected', placement ? 'false' : 'true');
+}}
+
+function edgeClass(value) {{
+  return value === '公榫' ? 'edge-T' : (value === '母榫' ? 'edge-G' : 'edge-C');
+}}
+
+function edgeSvgLabel(side, value, x, y, anchor) {{
+  return '<text x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" text-anchor="' + anchor
+    + '" class="dg-edge ' + edgeClass(value) + '">' + side + ' · ' + value + '</text>';
+}}
+
+function renderPlacementDiagram(board) {{
+  const container = document.getElementById('placementDiagram');
+  if (!board) {{
+    container.innerHTML = '';
+    return;
+  }}
+  const W = board.placement_width || board.len;
+  const H = board.placement_height || board.wid;
+  const scale = Math.min(460 / W, 260 / H);
+  const drawW = W * scale;
+  const drawH = H * scale;
+  const padX = 115;
+  const padY = 58;
+  const svgW = drawW + padX * 2;
+  const svgH = drawH + padY * 2;
+  const e = board.edges || {{ top:'?', right:'?', bottom:'?', left:'?' }};
+  let s = '<svg width="' + svgW + '" height="' + svgH + '" viewBox="0 0 ' + svgW + ' ' + svgH + '">';
+  const polygon = board.placement_polygon || [];
+  if (polygon.length) {{
+    const points = polygon.map(point =>
+      (padX + point[0] * scale).toFixed(1) + ',' +
+      (padY + (H - point[1]) * scale).toFixed(1)
+    ).join(' ');
+    s += '<polygon points="' + points + '" class="board-fill' + (board.is_cut ? ' cut' : '') + '"/>';
+  }} else {{
+    s += '<rect x="' + padX + '" y="' + padY + '" width="' + drawW.toFixed(1)
+      + '" height="' + drawH.toFixed(1) + '" class="board-fill' + (board.is_cut ? ' cut' : '') + '"/>';
+  }}
+  s += '<text x="' + (padX + drawW / 2).toFixed(1) + '" y="' + (padY + drawH / 2 + 4).toFixed(1)
+    + '" class="dg-lbl">位' + board.label + ' · ' + (board.stock_class || '?') + ' 型</text>';
+  s += edgeSvgLabel('上', e.top, padX + drawW / 2, padY - 14, 'middle');
+  s += edgeSvgLabel('右', e.right, padX + drawW + 12, padY + drawH / 2 + 4, 'start');
+  s += edgeSvgLabel('下', e.bottom, padX + drawW / 2, padY + drawH + 24, 'middle');
+  s += edgeSvgLabel('左', e.left, padX - 12, padY + drawH / 2 + 4, 'end');
+  s += '</svg>';
+  container.innerHTML = s;
 }}
 
 // 渲染"从整板切割"示意图
@@ -657,9 +775,9 @@ function renderSourceDiagram(root, clickedLabel) {{
   const scale = 360 / L;
   const boardW = Math.max(54, W * scale);
   const boardH = L * scale;
-  const padX = 110;
+  const padX = 150;
   const topPad = 55;
-  const svgW = boardW + padX * 2;
+  const svgW = boardW + padX * 2 + 80;
   const svgH = boardH + topPad + 55;
 
   let s = '<svg width="' + svgW + '" height="' + svgH + '" viewBox="0 0 ' + svgW + ' ' + svgH + '">';
@@ -692,9 +810,22 @@ function renderSourceDiagram(root, clickedLabel) {{
       s += '<text x="' + (x + w / 2).toFixed(1) + '" y="' + (y + h / 2 + 1).toFixed(1) + '" '
          + 'class="dg-lbl">位' + p.label + '</text>';
     }}
-    s += '<text x="' + (padX + boardW + 8) + '" y="' + (y + h / 2 + 3).toFixed(1) + '" '
+    s += '<text x="' + (padX + boardW + 72) + '" y="' + (y + h / 2 + 3).toFixed(1) + '" '
        + 'class="dg-dim">位' + p.label + ' ' + Math.round(p.len) + '×' + Math.round(p.wid) + '</text>';
   }});
+
+  const selectedPiece = pieces.find(p => String(p.label) === String(clickedLabel));
+  if (selectedPiece && selectedPiece.edges) {{
+    const e = selectedPiece.edges;
+    const x = padX + selectedPiece.x * scale;
+    const y = topPad + (L - selectedPiece.y - selectedPiece.len) * scale;
+    const w = Math.max(2, selectedPiece.wid * scale);
+    const h = Math.max(2, selectedPiece.len * scale);
+    s += edgeSvgLabel('上', e.top, x + w / 2, y - 7, 'middle');
+    s += edgeSvgLabel('右', e.right, x + w + 8, y + h / 2 + 4, 'start');
+    s += edgeSvgLabel('下', e.bottom, x + w / 2, y + h + 13, 'middle');
+    s += edgeSvgLabel('左', e.left, x - 8, y + h / 2 + 4, 'end');
+  }}
 
   const status = src.valid ? '通过' : '失败：' + (src.errors || []).join('；');
   s += '<text x="' + padX + '" y="18" class="dg-source">源板 ' + root

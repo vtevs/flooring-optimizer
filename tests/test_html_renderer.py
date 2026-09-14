@@ -1,13 +1,17 @@
 """测试交互式 HTML 渲染器"""
 
+import json
+import re
 from types import SimpleNamespace
 
 from floorplan.svg.html_renderer import _build_html
 from floorplan.svg.html_renderer import _board_svg
 from floorplan.svg.html_renderer import _reconstruct_source_layouts
+from floorplan.svg.html_renderer import render_multi_html
 from floorplan.models import (
     BoardConfig, Config, CuttingGroup, CuttingPiece, EdgeConfig, LayoutResult,
-    LayoutStatistics, MultiRoomResult, Pattern, PlacedBoard,
+    InstallationConfig, LayoutStatistics, MultiRoomResult, Pattern,
+    PlacedBoard, RoomSpec,
 )
 from floorplan.stock_assignment import assign_supplier_stock
 
@@ -166,6 +170,121 @@ def test_html_source_diagram_shows_validation_and_recorded_rotation():
     assert "p.x" in html
     assert "p.y" in html
     assert "p.polygon" in html
+
+
+def test_html_modal_has_installation_and_source_edge_views():
+    html = _build_html(
+        cw=100,
+        ch=100,
+        rooms_svg=[],
+        all_boards=[{
+            "label": "1", "source": "源1", "root": "源1", "room": "A",
+            "is_cut": True, "len": 30, "wid": 20,
+            "placement_width": 30, "placement_height": 20,
+            "placement_polygon": [[0, 0], [30, 0], [30, 20], [0, 20], [0, 0]],
+            "stock_class": "A", "source_rotation": 90,
+            "edges": {"top": "公榫", "right": "母榫", "bottom": "母榫", "left": "切割面"},
+        }],
+        stats=[], total_boards=1, total_full=0, total_cut=1,
+        source_layouts={
+            "源1": {
+                "length": 100, "width": 20, "stock_class": "A",
+                "valid": True, "errors": [],
+                "pieces": [{
+                    "label": "1", "source": "源1",
+                    "x": 0, "y": 0, "len": 30, "wid": 20,
+                    "edges": {"top": "切割面", "right": "母榫", "bottom": "母榫", "left": "公榫"},
+                }],
+            },
+        },
+    )
+
+    assert 'id="placementView"' in html
+    assert 'id="sourceView"' in html
+    assert '>铺装视图</button>' in html
+    assert '>源板切割视图</button>' in html
+    assert "点击任意板片" in html
+    assert "renderPlacementDiagram(clicked)" in html
+    assert "selectedPiece.edges" in html
+    assert "edgeSvgLabel('上'" in html
+    assert "edgeSvgLabel('右'" in html
+    assert "edgeSvgLabel('下'" in html
+    assert "edgeSvgLabel('左'" in html
+
+
+def test_rendered_board_metadata_preserves_installed_cut_shape(tmp_path):
+    board = PlacedBoard(
+        x=30, y=10, rotation=0, length=60, width=20,
+        is_cut=True,
+        cut_polygon=[
+            (0, 0), (60, 0), (60, 20), (20, 20),
+            (20, 10), (0, 10), (0, 0),
+        ],
+        label="1", source_id="源1",
+    )
+    result = LayoutResult(
+        boards=[board],
+        statistics=LayoutStatistics(cutting_groups=[]),
+        pattern=Pattern.L_TRIPLE,
+    )
+    multi = MultiRoomResult(room_results=[
+        (RoomSpec(name="R", width=60, length=20), result),
+    ])
+    config = Config(
+        board=BoardConfig(length=60, width=20),
+        installation=InstallationConfig(pattern=Pattern.L_TRIPLE),
+        edges=EdgeConfig(expansion_gap=0),
+    )
+    output = tmp_path / "plan.html"
+
+    render_multi_html(multi, config, output)
+
+    html = output.read_text(encoding="utf-8")
+    boards = json.loads(
+        re.search(r"const BOARDS = (.*?);\nconst SOURCES", html, re.S).group(1)
+    )
+    assert boards[0]["placement_width"] == 60
+    assert boards[0]["placement_height"] == 20
+    assert len(boards[0]["placement_polygon"]) == 7
+
+
+def test_source_layout_records_selected_piece_edges_in_source_orientation():
+    placed = PlacedBoard(
+        x=10, y=50, rotation=0, length=20, width=100,
+        label="1", source_id="源1",
+    )
+    group = CuttingGroup(
+        source_id="源1", root_source_id="源1",
+        pieces=[CuttingPiece(
+            label="1", length=100, width=20,
+            source_width=20, source_length=100,
+        )],
+        total_length=100, used_length=100, waste_length=0,
+        total_width=20,
+    )
+    result = LayoutResult(
+        boards=[placed],
+        statistics=LayoutStatistics(cutting_groups=[group]),
+        pattern=Pattern.L_TRIPLE,
+    )
+    board = BoardConfig(
+        length=100, width=20,
+        stock_class_policy="supplier-ab-vertical",
+    )
+    assert assign_supplier_stock(result, board, kerf=2) == []
+    multi = MultiRoomResult(room_results=[
+        (SimpleNamespace(name="R"), result),
+    ])
+    config = Config(board=board, edges=EdgeConfig(), kerf=2)
+
+    layouts = _reconstruct_source_layouts(multi, config, {}, lambda sid: "源1")
+
+    piece_edges = layouts["源1"]["pieces"][0]["edges"]
+    expected = {
+        "A": {"top": "公榫", "right": "母榫", "bottom": "母榫", "left": "公榫"},
+        "B": {"top": "公榫", "right": "公榫", "bottom": "母榫", "left": "母榫"},
+    }
+    assert piece_edges == expected[placed.stock_class]
 
 
 def test_source_layout_validation_rejects_tampered_recorded_rotation():
