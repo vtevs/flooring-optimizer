@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="660" viewBox="0 0 1500 660">
+<rect width="1500" height="660" fill="#fffdf8"/>
+<g font-family="sans-serif"><text x="40" y="36" font-size="23">6A + 6B 起铺板组 · 红线为锯切保留边 · 红圈为起点</text>
+<text x="40" y="82" font-size="19">照片基准：552×886mm</text>
+<rect x="40.0" y="480.24" width="253.92000000000002" height="42.32" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="166.96" y="501.40000000000003" font-size="13" text-anchor="middle" fill="#982b20">B1</text>
+<text x="166.96" y="516.4000000000001" font-size="11" text-anchor="middle">552</text>
+<line x1="293.92" y1="522.56" x2="293.92" y2="480.24" stroke="#dc2626" stroke-width="3"/>
+<rect x="40.0" y="437.92" width="253.92000000000002" height="42.32" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="166.96" y="459.08000000000004" font-size="13" text-anchor="middle" fill="#982b20">B2</text>
+<text x="166.96" y="474.08000000000004" font-size="11" text-anchor="middle">552</text>
+<line x1="293.92" y1="480.24" x2="293.92" y2="437.92" stroke="#dc2626" stroke-width="3"/>
+<rect x="40.0" y="395.6" width="253.92000000000002" height="42.32" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="166.96" y="416.76" font-size="13" text-anchor="middle" fill="#982b20">B3</text>
+<text x="166.96" y="431.76" font-size="11" text-anchor="middle">552</text>
+<line x1="293.92" y1="437.92" x2="293.92" y2="395.6" stroke="#dc2626" stroke-width="3"/>
+<rect x="40.0" y="115.0" width="42.32" height="280.6" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="61.16" y="255.3" font-size="13" text-anchor="middle" fill="#982b20">A1</text>
+<text x="61.16" y="270.3" font-size="11" text-anchor="middle">610</text>
+<rect x="82.32" y="115.0" width="42.32" height="280.6" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="103.48" y="255.3" font-size="13" text-anchor="middle" fill="#982b20">A2</text>
+<text x="103.48" y="270.3" font-size="11" text-anchor="middle">610</text>
+<rect x="124.64" y="115.0" width="42.32" height="280.6" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="145.8" y="255.3" font-size="13" text-anchor="middle" fill="#982b20">A3</text>
+<text x="145.8" y="270.3" font-size="11" text-anchor="middle">610</text>
+<rect x="166.96" y="353.28" width="126.96000000000001" height="42.32" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="230.44" y="374.44" font-size="13" text-anchor="middle" fill="#982b20">B4</text>
+<text x="230.44" y="389.44" font-size="11" text-anchor="middle">276</text>
+<line x1="293.92" y1="395.6" x2="293.92" y2="353.28" stroke="#dc2626" stroke-width="3"/>
+<rect x="166.96" y="310.96000000000004" width="126.96000000000001" height="42.32" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="230.44" y="332.12" font-size="13" text-anchor="middle" fill="#982b20">B5</text>
+<text x="230.44" y="347.12" font-size="11" text-anchor="middle">276</text>
+<line x1="293.92" y1="353.28" x2="293.92" y2="310.96000000000004" stroke="#dc2626" stroke-width="3"/>
+<rect x="166.96" y="268.64" width="126.96000000000001" height="42.32" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="230.44" y="289.8" font-size="13" text-anchor="middle" fill="#982b20">B6</text>
+<text x="230.44" y="304.8" font-size="11" text-anchor="middle">276</text>
+<line x1="293.92" y1="310.96000000000004" x2="293.92" y2="268.64" stroke="#dc2626" stroke-width="3"/>
+<rect x="166.96" y="115.0" width="42.32" height="153.64000000000001" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="188.12" y="191.82" font-size="13" text-anchor="middle" fill="#982b20">A4</text>
+<text x="188.12" y="206.82" font-size="11" text-anchor="middle">334</text>
+<line x1="166.96" y1="115.0" x2="209.28" y2="115.0" stroke="#dc2626" stroke-width="3"/>
+<rect x="209.28" y="115.0" width="42.32" height="153.64000000000001" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="230.44" y="191.82" font-size="13" text-anchor="middle" fill="#982b20">A5</text>
+<text x="230.44" y="206.82" font-size="11" text-anchor="middle">334</text>
+<line x1="209.28" y1="115.0" x2="251.60000000000002" y2="115.0" stroke="#dc2626" stroke-width="3"/>
+<rect x="251.60000000000002" y="115.0" width="42.32" height="153.64000000000001" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="272.76" y="191.82" font-size="13" text-anchor="middle" fill="#982b20">A6</text>
+<text x="272.76" y="206.82" font-size="11" text-anchor="middle">334</text>
+<line x1="251.60000000000002" y1="115.0" x2="293.92" y2="115.0" stroke="#dc2626" stroke-width="3"/>
+<circle cx="293.92" cy="115.0" r="12" fill="none" stroke="#dc2626" stroke-width="3"/>
+<text x="40" y="560" font-size="17">左母槽 / 下公槽；A180°、B270°</text>
+<text x="540" y="82" font-size="19">第二种基准：886×552mm</text>
+<rect x="540.0" y="115.0" width="42.32" height="253.92000000000002" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="561.16" y="241.96" font-size="13" text-anchor="middle" fill="#982b20">A1</text>
+<text x="561.16" y="256.96000000000004" font-size="11" text-anchor="middle">552</text>
+<line x1="540.0" y1="115.0" x2="582.32" y2="115.0" stroke="#dc2626" stroke-width="3"/>
+<rect x="582.32" y="115.0" width="42.32" height="253.92000000000002" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="603.48" y="241.96" font-size="13" text-anchor="middle" fill="#982b20">A2</text>
+<text x="603.48" y="256.96000000000004" font-size="11" text-anchor="middle">552</text>
+<line x1="582.32" y1="115.0" x2="624.64" y2="115.0" stroke="#dc2626" stroke-width="3"/>
+<rect x="624.64" y="115.0" width="42.32" height="253.92000000000002" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="645.8" y="241.96" font-size="13" text-anchor="middle" fill="#982b20">A3</text>
+<text x="645.8" y="256.96000000000004" font-size="11" text-anchor="middle">552</text>
+<line x1="624.64" y1="115.0" x2="666.96" y2="115.0" stroke="#dc2626" stroke-width="3"/>
+<rect x="666.96" y="326.6" width="280.6" height="42.32" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="807.26" y="347.76" font-size="13" text-anchor="middle" fill="#982b20">B1</text>
+<text x="807.26" y="362.76" font-size="11" text-anchor="middle">610</text>
+<rect x="666.96" y="284.28" width="280.6" height="42.32" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="807.26" y="305.44" font-size="13" text-anchor="middle" fill="#982b20">B2</text>
+<text x="807.26" y="320.44" font-size="11" text-anchor="middle">610</text>
+<rect x="666.96" y="241.96" width="280.6" height="42.32" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="807.26" y="263.12" font-size="13" text-anchor="middle" fill="#982b20">B3</text>
+<text x="807.26" y="278.12" font-size="11" text-anchor="middle">610</text>
+<rect x="666.96" y="115.0" width="42.32" height="126.96000000000001" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="688.12" y="178.48000000000002" font-size="13" text-anchor="middle" fill="#982b20">A4</text>
+<text x="688.12" y="193.48000000000002" font-size="11" text-anchor="middle">276</text>
+<line x1="666.96" y1="115.0" x2="709.28" y2="115.0" stroke="#dc2626" stroke-width="3"/>
+<rect x="709.28" y="115.0" width="42.32" height="126.96000000000001" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="730.44" y="178.48000000000002" font-size="13" text-anchor="middle" fill="#982b20">A5</text>
+<text x="730.44" y="193.48000000000002" font-size="11" text-anchor="middle">276</text>
+<line x1="709.28" y1="115.0" x2="751.6" y2="115.0" stroke="#dc2626" stroke-width="3"/>
+<rect x="751.6" y="115.0" width="42.32" height="126.96000000000001" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="772.76" y="178.48000000000002" font-size="13" text-anchor="middle" fill="#982b20">A6</text>
+<text x="772.76" y="193.48000000000002" font-size="11" text-anchor="middle">276</text>
+<line x1="751.6" y1="115.0" x2="793.9200000000001" y2="115.0" stroke="#dc2626" stroke-width="3"/>
+<rect x="793.9200000000001" y="199.64" width="153.64000000000001" height="42.32" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="870.74" y="220.8" font-size="13" text-anchor="middle" fill="#982b20">B4</text>
+<text x="870.74" y="235.8" font-size="11" text-anchor="middle">334</text>
+<line x1="947.56" y1="241.96" x2="947.56" y2="199.64" stroke="#dc2626" stroke-width="3"/>
+<rect x="793.9200000000001" y="157.32" width="153.64000000000001" height="42.32" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="870.74" y="178.48000000000002" font-size="13" text-anchor="middle" fill="#982b20">B5</text>
+<text x="870.74" y="193.48000000000002" font-size="11" text-anchor="middle">334</text>
+<line x1="947.56" y1="199.64" x2="947.56" y2="157.32" stroke="#dc2626" stroke-width="3"/>
+<rect x="793.9200000000001" y="115.0" width="153.64000000000001" height="42.32" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="870.74" y="136.16" font-size="13" text-anchor="middle" fill="#982b20">B6</text>
+<text x="870.74" y="151.16" font-size="11" text-anchor="middle">334</text>
+<line x1="947.56" y1="157.32" x2="947.56" y2="115.0" stroke="#dc2626" stroke-width="3"/>
+<circle cx="947.56" cy="115.0" r="12" fill="none" stroke="#dc2626" stroke-width="3"/>
+<text x="540" y="560" font-size="17">左母槽 / 下公槽；A180°、B270°</text>
+<text x="1040" y="82" font-size="19">主卧：照片顺时针90°</text>
+<rect x="1040.0" y="115.0" width="42.32" height="253.92000000000002" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="1061.16" y="241.96" font-size="13" text-anchor="middle" fill="#982b20">B1</text>
+<text x="1061.16" y="256.96000000000004" font-size="11" text-anchor="middle">552</text>
+<line x1="1040.0" y1="368.92" x2="1082.32" y2="368.92" stroke="#dc2626" stroke-width="3"/>
+<rect x="1082.32" y="115.0" width="42.32" height="253.92000000000002" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="1103.48" y="241.96" font-size="13" text-anchor="middle" fill="#982b20">B2</text>
+<text x="1103.48" y="256.96000000000004" font-size="11" text-anchor="middle">552</text>
+<line x1="1082.32" y1="368.92" x2="1124.64" y2="368.92" stroke="#dc2626" stroke-width="3"/>
+<rect x="1124.64" y="115.0" width="42.32" height="253.92000000000002" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="1145.8" y="241.96" font-size="13" text-anchor="middle" fill="#982b20">B3</text>
+<text x="1145.8" y="256.96000000000004" font-size="11" text-anchor="middle">552</text>
+<line x1="1124.64" y1="368.92" x2="1166.96" y2="368.92" stroke="#dc2626" stroke-width="3"/>
+<rect x="1166.96" y="115.0" width="280.6" height="42.32" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="1307.26" y="136.16" font-size="13" text-anchor="middle" fill="#982b20">A1</text>
+<text x="1307.26" y="151.16" font-size="11" text-anchor="middle">610</text>
+<rect x="1166.96" y="157.32" width="280.6" height="42.32" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="1307.26" y="178.48000000000002" font-size="13" text-anchor="middle" fill="#982b20">A2</text>
+<text x="1307.26" y="193.48000000000002" font-size="11" text-anchor="middle">610</text>
+<rect x="1166.96" y="199.64" width="280.6" height="42.32" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="1307.26" y="220.8" font-size="13" text-anchor="middle" fill="#982b20">A3</text>
+<text x="1307.26" y="235.8" font-size="11" text-anchor="middle">610</text>
+<rect x="1166.96" y="241.96" width="42.32" height="126.96000000000001" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="1188.12" y="305.44" font-size="13" text-anchor="middle" fill="#982b20">B4</text>
+<text x="1188.12" y="320.44" font-size="11" text-anchor="middle">276</text>
+<line x1="1166.96" y1="368.92" x2="1209.28" y2="368.92" stroke="#dc2626" stroke-width="3"/>
+<rect x="1209.28" y="241.96" width="42.32" height="126.96000000000001" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="1230.44" y="305.44" font-size="13" text-anchor="middle" fill="#982b20">B5</text>
+<text x="1230.44" y="320.44" font-size="11" text-anchor="middle">276</text>
+<line x1="1209.28" y1="368.92" x2="1251.6" y2="368.92" stroke="#dc2626" stroke-width="3"/>
+<rect x="1251.6" y="241.96" width="42.32" height="126.96000000000001" fill="#eed9b9" stroke="#715d41" stroke-width="1"/>
+<text x="1272.76" y="305.44" font-size="13" text-anchor="middle" fill="#982b20">B6</text>
+<text x="1272.76" y="320.44" font-size="11" text-anchor="middle">276</text>
+<line x1="1251.6" y1="368.92" x2="1293.92" y2="368.92" stroke="#dc2626" stroke-width="3"/>
+<rect x="1293.92" y="241.96" width="153.64000000000001" height="42.32" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="1370.74" y="263.12" font-size="13" text-anchor="middle" fill="#982b20">A4</text>
+<text x="1370.74" y="278.12" font-size="11" text-anchor="middle">334</text>
+<line x1="1447.56" y1="284.28" x2="1447.56" y2="241.96" stroke="#dc2626" stroke-width="3"/>
+<rect x="1293.92" y="284.28" width="153.64000000000001" height="42.32" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="1370.74" y="305.44" font-size="13" text-anchor="middle" fill="#982b20">A5</text>
+<text x="1370.74" y="320.44" font-size="11" text-anchor="middle">334</text>
+<line x1="1447.56" y1="326.6" x2="1447.56" y2="284.28" stroke="#dc2626" stroke-width="3"/>
+<rect x="1293.92" y="326.6" width="153.64000000000001" height="42.32" fill="#d1aa74" stroke="#715d41" stroke-width="1"/>
+<text x="1370.74" y="347.76" font-size="13" text-anchor="middle" fill="#982b20">A6</text>
+<text x="1370.74" y="362.76" font-size="11" text-anchor="middle">334</text>
+<line x1="1447.56" y1="368.92" x2="1447.56" y2="326.6" stroke="#dc2626" stroke-width="3"/>
+<circle cx="1447.56" cy="368.92" r="12" fill="none" stroke="#dc2626" stroke-width="3"/>
+<text x="1040" y="560" font-size="17">左公槽 / 上母槽；A90°、B180°</text>
+<text x="40" y="610" font-size="16">尺寸为每片保留长度，板宽均为92mm；锯缝1.5mm从废料侧扣除。编号仅用于本图。</text>
+<text x="40" y="637" font-size="15">第二种为重新组装的另一种几何排列，非翻面；儿童房选第二种并逆时针旋转90°，次卧选照片基准。</text></g></svg>
